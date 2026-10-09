@@ -119,6 +119,22 @@ public final class ActivationTests {
         helper.succeed();
     }
 
+    /** The core shows up in the recipe book as soon as the player gets clay or redstone. */
+    @GameTest(structure = Arena.STRUCTURE)
+    public static void clayUnlocksCoreRecipe(GameTestHelper helper) {
+        var recipe = net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.RECIPE,
+            net.minecraft.resources.Identifier.fromNamespaceAndPath("dirtcheapgolems", "golem_core"));
+        var player = Arena.survivalPlayer(helper, new Vec3(4.5, 1, 4.5));
+        helper.assertFalse(player.getRecipeBook().contains(recipe), "recipe should start locked");
+        var clay = new ItemStack(Items.CLAY_BALL);
+        player.getInventory().add(clay.copy());
+        net.minecraft.advancements.triggers.CriteriaTriggers.INVENTORY_CHANGED.trigger(player, player.getInventory(), clay);
+        boolean unlocked = player.getRecipeBook().contains(recipe);
+        Arena.removePlayer(helper, player);
+        helper.assertTrue(unlocked, "picking up clay should unlock the golem core recipe");
+        helper.succeed();
+    }
+
     /** Review Focus 1 */
     @GameTest(structure = Arena.STRUCTURE)
     public static void adventureModeCannotActivate(GameTestHelper helper) {
