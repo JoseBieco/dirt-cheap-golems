@@ -23,7 +23,8 @@ public final class ModGameTests {
     public static final List<Class<?>> TEST_CLASSES = List.of(
         SmokeTests.class,
         CoreGolemTests.class,
-        ActivationTests.class
+        ActivationTests.class,
+        DirtGolemTests.class
     );
 
     private static final DeferredRegister<Consumer<GameTestHelper>> FUNCTIONS =

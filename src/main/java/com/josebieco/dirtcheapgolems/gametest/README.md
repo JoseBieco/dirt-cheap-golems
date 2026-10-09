@@ -21,5 +21,6 @@ This mod glues them together:
 4. `gradlew runGameTestServer` runs every registered test instance and exits non-zero on failure.
 
 Arena: `Arena.STRUCTURE` = `forge:empty9x5x9` — Forge generates `forge:emptyXxYxZ` structures (all air)
-on the fly. The arena has no floor of its own; call `helper.makeFloor()` (stone at relative y=0)
+on the fly. The arena has no floor of its own; call `Arena.floor(helper)` (stone at relative y=0;
+note Forge's `helper.makeFloor()` builds at y=-1, under the arena)
 when the test needs solid ground, and place things at y=1.

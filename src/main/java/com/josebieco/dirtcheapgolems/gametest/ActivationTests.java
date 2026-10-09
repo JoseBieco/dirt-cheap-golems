@@ -30,7 +30,7 @@ public final class ActivationTests {
     static final BlockPos TOP = BOTTOM.above();
 
     static void buildPillar(GameTestHelper helper, Block top, Block bottom) {
-        helper.makeFloor();
+        Arena.floor(helper);
         helper.setBlock(BOTTOM, bottom);
         helper.setBlock(TOP, top);
     }

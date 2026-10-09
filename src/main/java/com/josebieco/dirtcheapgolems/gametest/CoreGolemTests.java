@@ -20,7 +20,7 @@ public final class CoreGolemTests {
     private static final BlockPos CENTER = new BlockPos(4, 1, 4);
 
     static DirtGolem spawnDirtGolem(GameTestHelper helper, BlockPos relative) {
-        helper.makeFloor();
+        Arena.floor(helper);
         var golem = helper.spawn(ModEntities.DIRT_GOLEM.get(), relative);
         golem.setHomePos(helper.absolutePos(relative));
         return golem;
@@ -70,7 +70,7 @@ public final class CoreGolemTests {
     /** Review Focus 2: a golem spawned without a pillar (spawn egg) gets its spawn position as home. */
     @GameTest(structure = Arena.STRUCTURE)
     public static void spawnEggSetsHome(GameTestHelper helper) {
-        helper.makeFloor();
+        Arena.floor(helper);
         var pos = helper.absolutePos(CENTER);
         AbstractCheapGolem golem = ModEntities.DIRT_GOLEM.get().spawn(helper.getLevel(), pos, EntitySpawnReason.SPAWN_ITEM_USE);
         helper.assertTrue(golem != null, "golem should spawn");
