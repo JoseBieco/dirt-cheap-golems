@@ -10,7 +10,8 @@ plugins {
 }
 
 version = '1.0.0'
-group = 'com.example.examplemod'
+group = 'com.josebieco.dirtcheapgolems'
+base.archivesName = 'dirtcheapgolems'
 
 // Mojang ships Java 25 to end users in 26.1+, so your mod should target Java 25.
 java.toolchain.languageVersion = JavaLanguageVersion.of(25)
@@ -24,7 +25,7 @@ minecraft {
             workingDir = layout.projectDirectory.dir('run')
 
             systemProperty 'eventbus.api.strictRuntimeChecks', 'true'
-            systemProperty 'forge.enabledGameTestNamespaces', 'examplemod'
+            systemProperty 'forge.enabledGameTestNamespaces', 'dirtcheapgolems'
         }
 
         register('client')
@@ -38,7 +39,7 @@ minecraft {
         register('data') {
             workingDir = layout.projectDirectory.dir('run-data')
 
-            args '--mod', 'examplemod', '--all', '--output', layout.projectDirectory.dir('src/generated/resources'), '--existing', layout.projectDirectory.dir('src/main/resources')
+            args '--mod', 'dirtcheapgolems', '--all', '--output', layout.projectDirectory.dir('src/generated/resources'), '--existing', layout.projectDirectory.dir('src/main/resources')
         }
     }
 }
@@ -59,4 +60,14 @@ tasks.withType(JavaCompile).configureEach {
     // Use the UTF-8 charset for Java compilation
     // This is done by default in Java 18+, but this ensures it no matter the Java or Gradle version
     options.encoding = 'UTF-8'
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.11.4')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test', Test) {
+    useJUnitPlatform()
 }
