@@ -21,7 +21,8 @@ import java.util.function.Consumer;
 public final class ModGameTests {
     /** Every class holding {@code @GameTest} methods. Add new test classes here. */
     public static final List<Class<?>> TEST_CLASSES = List.of(
-        SmokeTests.class
+        SmokeTests.class,
+        CoreGolemTests.class
     );
 
     private static final DeferredRegister<Consumer<GameTestHelper>> FUNCTIONS =

@@ -3,6 +3,7 @@ package com.josebieco.dirtcheapgolems;
 import com.josebieco.dirtcheapgolems.config.GolemConfig;
 import com.josebieco.dirtcheapgolems.datagen.DataGenerators;
 import com.josebieco.dirtcheapgolems.gametest.ModGameTests;
+import com.josebieco.dirtcheapgolems.registry.ModEntities;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -15,6 +16,7 @@ public final class DirtCheapGolems {
     public DirtCheapGolems(FMLJavaModLoadingContext context) {
         var modBusGroup = context.getModBusGroup();
 
+        ModEntities.register(modBusGroup);
         ModGameTests.register(modBusGroup);
         GatherDataEvent.getBus(modBusGroup).addListener(DataGenerators::gatherData);
 

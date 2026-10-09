@@ -1,2 +1,7 @@
-// 26.3	2026-10-09T17:37:25.9611097	Dirt Cheap Golems game test instances
+// 26.3	2026-10-09T17:43:24.2244548	Dirt Cheap Golems game test instances
+b6cacf9322cb65332c9ab7b09033c641e20a581a data/dirtcheapgolems/test_instance/core/consume_to_zero_crumbles_immediately.json
+5ab3673a5a6fd331e468915562b27ea72e5836b7 data/dirtcheapgolems/test_instance/core/healing_does_not_restore_integrity.json
+454bb32a41c7c134760d2637d5a08e4301d62f69 data/dirtcheapgolems/test_instance/core/integrity_depletion_crumbles.json
+a2f5d4eb2a72ba135a2e2480e6f95076bee5acc7 data/dirtcheapgolems/test_instance/core/nbt_round_trip.json
+a4e56a42ad83e4c0d1d248676b5e24269a5becd2 data/dirtcheapgolems/test_instance/core/spawn_egg_sets_home.json
 c0d368a4cf28f160007b044266d1106001344a7e data/dirtcheapgolems/test_instance/smoke/arena_loads.json
