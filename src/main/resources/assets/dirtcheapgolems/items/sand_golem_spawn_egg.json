@@ -3,8 +3,8 @@
     "type": "minecraft:model",
     "model": "dirtcheapgolems:item/golem_spawn_egg",
     "tints": [
-      { "type": "minecraft:constant", "value": 14405539 },
-      { "type": "minecraft:constant", "value": 11569742 }
+      { "type": "minecraft:constant", "value": 14931876 },
+      { "type": "minecraft:constant", "value": 11045452 }
     ]
   }
 }
