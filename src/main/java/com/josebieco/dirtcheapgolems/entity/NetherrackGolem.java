@@ -19,6 +19,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
@@ -93,6 +94,25 @@ public class NetherrackGolem extends AbstractCheapGolem {
             staleLight = null;
         }
         walkingLight.update(level, this.blockPosition().above(), GolemConfig.netherrackLightLevel());
+    }
+
+    /** Water or rain (spec §6.3, D7): instantly becomes stone at its feet, without drops. */
+    @Override
+    protected void environmentTick() {
+        if (!(this.level() instanceof ServerLevel level)) return;
+        if (!this.isInWater() && !level.isRainingAt(this.blockPosition().above())) return;
+
+        walkingLight.clear(level);
+        var feet = this.blockPosition();
+        var state = level.getBlockState(feet);
+        if (!state.isAir() && !state.canBeReplaced()) {
+            crumble();
+            return;
+        }
+        level.setBlock(feet, Blocks.STONE.defaultBlockState(), Block.UPDATE_ALL);
+        level.sendParticles(ParticleTypes.CLOUD, this.getX(), this.getY(0.5), this.getZ(), 20, 0.3, 0.4, 0.3, 0.02);
+        level.playSound(null, feet, SoundEvents.FIRE_EXTINGUISH, SoundSource.NEUTRAL, 1.0F, 1.0F);
+        this.discard();
     }
 
     /** Every removal path (death, discard, chunk unload, dimension change) takes the light away. */

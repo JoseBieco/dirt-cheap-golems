@@ -180,6 +180,42 @@ public final class NetherrackGolemTests {
         helper.succeed();
     }
 
+    // ---- water and rain turn it into stone (spec §6.3, D7) ----
+
+    static void assertPetrified(GameTestHelper helper, NetherrackGolem golem, BlockPos feet) {
+        helper.assertTrue(golem.isRemoved(), "golem should be gone");
+        helper.assertBlockPresent(Blocks.STONE, feet);
+        helper.assertValueEqual(0, countLights(helper), "light count", "no light left");
+        helper.assertEntityNotPresent(EntityTypes.ITEM);
+    }
+
+    /** T9 */
+    @GameTest(structure = Arena.STRUCTURE, maxTicks = 20)
+    public static void waterTurnsIntoStone(GameTestHelper helper) {
+        Arena.floor(helper);
+        for (var dir : net.minecraft.core.Direction.Plane.HORIZONTAL)
+            for (int y = 1; y <= 2; y++)
+                helper.setBlock(CENTER.relative(dir).atY(y), Blocks.STONE);
+        helper.setBlock(CENTER, Blocks.WATER);
+        var golem = helper.spawnWithNoFreeWill(ModEntities.NETHERRACK_GOLEM.get(), CENTER);
+        helper.runAfterDelay(5, () -> {
+            assertPetrified(helper, golem, CENTER);
+            helper.succeed();
+        });
+    }
+
+    @GameTest(structure = Arena.STRUCTURE, environment = "rain", skyAccess = true, maxTicks = 100)
+    public static void rainTurnsIntoStone(GameTestHelper helper) {
+        Arena.floor(helper);
+        Arena.rainyBiome(helper);
+        var golem = helper.spawnWithNoFreeWill(ModEntities.NETHERRACK_GOLEM.get(), CENTER);
+        // Rain intensity ramps up over ~20 ticks after the environment starts.
+        whenFirst(helper, () -> helper.getLevel().isRaining(), () -> helper.runAfterDelay(2, () -> {
+            assertPetrified(helper, golem, CENTER);
+            helper.succeed();
+        }));
+    }
+
     /** Review Focus 5: unload/reload never leaves an orphan light, even if one survived a crash. */
     @GameTest(structure = Arena.STRUCTURE)
     public static void noLightLeftAfterReload(GameTestHelper helper) {
