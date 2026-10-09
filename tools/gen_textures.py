@@ -122,15 +122,6 @@ def item_core():
     return img
 
 
-def spawn_egg(base, spots, rng):
-    img = blank(16, 16)
-    for y in range(16):
-        for x in range(16):
-            if ((x - 7.5) / 5.5) ** 2 + ((y - 8.5) / 7.0) ** 2 <= 1.0:
-                img[y][x] = (*(spots if rng.random() < 0.25 else base), 255)
-    return img
-
-
 def sand_in_eyes_icon(rng):
     img = blank(18, 18)
     for y in range(18):
@@ -155,9 +146,6 @@ if __name__ == "__main__":
     write_png(os.path.join(ROOT, "entity", "cracks_low.png"), 64, 64, cracks(12, rng))
     write_png(os.path.join(ROOT, "entity", "cracks_high.png"), 64, 64, cracks(40, rng))
     write_png(os.path.join(ROOT, "item", "golem_core.png"), 16, 16, item_core())
-    eggs = {"dirt": ((134, 96, 67), (89, 125, 39)), "sand": ((219, 207, 163), (150, 120, 70)),
-            "netherrack": ((111, 54, 52), (255, 150, 40))}
-    for material, (base, spots) in eggs.items():
-        write_png(os.path.join(ROOT, "item", f"{material}_golem_spawn_egg.png"), 16, 16, spawn_egg(base, spots, rng))
+    # Spawn eggs: see tools/gen_spawn_egg.py (one tinted template shared by all golems).
     write_png(os.path.join(ROOT, "mob_effect", "sand_in_eyes.png"), 18, 18, sand_in_eyes_icon(rng))
     print("textures written to", ROOT)
