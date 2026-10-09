@@ -55,7 +55,8 @@ public final class DirtGolemTests {
         var crop = plant(helper, 4, 4, Blocks.WHEAT, 3);
         var golem = golemAt(helper, 2, 4);
         helper.runAfterDelay(200, () -> {
-            helper.assertValueEqual(3, age(helper, crop), "wheat age", "immature crop untouched");
+            // Random ticks may grow the wheat a stage; it must not have been harvested (age 0).
+            helper.assertTrue(age(helper, crop) >= 3, "immature crop must not be harvested");
             helper.assertTrue(golem.getIntegrity() >= 99, "no harvest cost");
             helper.succeed();
         });

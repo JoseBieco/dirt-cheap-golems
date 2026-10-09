@@ -1,4 +1,4 @@
-// 26.3	2026-10-09T18:06:19.0235919	Dirt Cheap Golems game test instances
+// 26.3	2026-10-09T18:11:53.2231589	Dirt Cheap Golems game test instances
 06ba75e6a20911448dc2a7f9e8538cb9217452de data/dirtcheapgolems/test_instance/activation/adventure_mode_cannot_activate.json
 ae6decef62df1600866ba6b981a035bd3d36afa9 data/dirtcheapgolems/test_instance/activation/clicking_bottom_block_also_works.json
 ae5cb838645e3bb2f2017f3af4631d90fbeb483b data/dirtcheapgolems/test_instance/activation/coarse_dirt_mixed_with_dirt_works.json
@@ -21,4 +21,7 @@ ca0858e6a55dd5ba70b4ad37592ded159d7d3fa1 data/dirtcheapgolems/test_instance/dirt
 f5dcd02703f950a78f1d7e1f6a8f25f13a6f18f6 data/dirtcheapgolems/test_instance/dirt/sheltered_from_rain_does_not_decay.json
 4ad0e34834e510365923276da5a2a1e98f126606 data/dirtcheapgolems/test_instance/dirt/two_golems_one_crop.json
 cd253a635f18903a6597e64302ab5dd8ea4b474f data/dirtcheapgolems/test_instance/dirt/water_doubles_decay.json
+5e4a460c044ac7c1298df82cea9c3b5d1c2fc055 data/dirtcheapgolems/test_instance/sand/clears_target_on_apply.json
+ce260617f5e86cdfd821dbb72761e6aa6c055e7b data/dirtcheapgolems/test_instance/sand/follow_range_restored_after_expiry.json
+6de43b0c5420c87df6876dbe2d31996259b32044 data/dirtcheapgolems/test_instance/sand/reduces_follow_range.json
 c0d368a4cf28f160007b044266d1106001344a7e data/dirtcheapgolems/test_instance/smoke/arena_loads.json

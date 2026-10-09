@@ -3,6 +3,7 @@ package com.josebieco.dirtcheapgolems;
 import com.josebieco.dirtcheapgolems.config.GolemConfig;
 import com.josebieco.dirtcheapgolems.datagen.DataGenerators;
 import com.josebieco.dirtcheapgolems.gametest.ModGameTests;
+import com.josebieco.dirtcheapgolems.registry.ModEffects;
 import com.josebieco.dirtcheapgolems.registry.ModEntities;
 import com.josebieco.dirtcheapgolems.registry.ModItems;
 import net.minecraftforge.data.event.GatherDataEvent;
@@ -19,6 +20,7 @@ public final class DirtCheapGolems {
 
         ModEntities.register(modBusGroup);
         ModItems.register(modBusGroup);
+        ModEffects.register(modBusGroup);
         ModGameTests.register(modBusGroup);
         GatherDataEvent.getBus(modBusGroup).addListener(DataGenerators::gatherData);
 

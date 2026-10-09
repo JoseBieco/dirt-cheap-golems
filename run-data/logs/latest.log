@@ -1,21 +1,21 @@
-[09out.2026 18:09:47.431] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--gameDir, ., --launchTarget, forge_userdev_data, --assetIndex, 34, --assetsDir, C:\Users\jo_bi\AppData\Roaming\.minecraft\assets, --mod, dirtcheapgolems, --all, --output, C:\Users\jo_bi\OneDrive\Área de Trabalho\projetos\Mods\dirt-cheap-golems\src\generated\resources, --existing, C:\Users\jo_bi\OneDrive\Área de Trabalho\projetos\Mods\dirt-cheap-golems\src\main\resources]
-[09out.2026 18:09:47.434] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: JVM identified as Eclipse Adoptium OpenJDK 64-Bit Server VM 25.0.4.1+1-LTS
-[09out.2026 18:09:47.436] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 10.2.6 starting: java version 25.0.4.1 by Eclipse Adoptium; OS Windows 11 arch amd64 version 10.0
-[09out.2026 18:09:47.578] [main/INFO] [net.minecraftforge.fml.loading.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forge_userdev_data
-[09out.2026 18:09:47.702] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=jar:file:///C:/Users/jo_bi/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.7/8ab114ac385e6dbdad5efafe28aba4df8120915f/mixin-0.8.7.jar!/ Service=ModLauncher Env=UNKNOWN
-[09out.2026 18:09:49.268] [main/INFO] [net.minecraftforge.fml.loading.moddiscovery.JarInJarDependencyLocator/]: No dependencies to load found. Skipping!
-[09out.2026 18:09:49.521] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forge_userdev_data' with arguments [--gameDir, ., --assetsDir, C:\Users\jo_bi\AppData\Roaming\.minecraft\assets, --assetIndex, 34, --mod, dirtcheapgolems, --all, --output, C:\Users\jo_bi\OneDrive\Área de Trabalho\projetos\Mods\dirt-cheap-golems\src\generated\resources, --existing, C:\Users\jo_bi\OneDrive\Área de Trabalho\projetos\Mods\dirt-cheap-golems\src\main\resources]
-[09out.2026 18:09:56.189] [modloading-worker-0/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Forge mod loading, version 66.0.9, for MC 26.3 with MCP 20260918.230105
-[09out.2026 18:09:56.190] [modloading-worker-0/INFO] [net.minecraftforge.common.MinecraftForge/FORGE]: MinecraftForge v66.0.9 Initialized
-[09out.2026 18:09:56.201] [modloading-worker-0/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Opening jdk.naming.dns/com.sun.jndi.dns to java.naming
-[09out.2026 18:09:56.435] [main/INFO] [net.minecraftforge.data.loading.DatagenModLoader/]: Initializing Data Gatherer for mods [dirtcheapgolems]
-[09out.2026 18:09:56.559] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/C:/Users/jo_bi/OneDrive/Área%20de%20Trabalho/projetos/Mods/dirt-cheap-golems/.gradle/mavenizer/repo/net/minecraftforge/forge/26.3-66.0.9/forge-26.3-66.0.9.jar%230!/assets/.mcassetsroot' uses unexpected schema
-[09out.2026 18:09:56.561] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/C:/Users/jo_bi/OneDrive/Área%20de%20Trabalho/projetos/Mods/dirt-cheap-golems/.gradle/mavenizer/repo/net/minecraftforge/forge/26.3-66.0.9/forge-26.3-66.0.9.jar%230!/data/.mcassetsroot' uses unexpected schema
-[09out.2026 18:09:56.783] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Dirt Cheap Golems game test instances
-[09out.2026 18:09:56.795] [main/INFO] [net.minecraft.data.DataGenerator/]: Dirt Cheap Golems game test instances finished after 10 ms
-[09out.2026 18:09:56.796] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Languages: en_us
-[09out.2026 18:09:56.797] [main/INFO] [net.minecraft.data.DataGenerator/]: Languages: en_us finished after 1 ms
-[09out.2026 18:09:56.797] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Languages: pt_br
-[09out.2026 18:09:56.798] [main/INFO] [net.minecraft.data.DataGenerator/]: Languages: pt_br finished after 0 ms
-[09out.2026 18:09:56.798] [main/INFO] [net.minecraft.data.DataGenerator/]: All providers took: 14 ms
-[09out.2026 18:09:56.804] [main/INFO] [net.minecraft.data.HashCache/]: Caching: total files: 25, old count: 25, new count: 25, removed stale: 0, written: 0
+[09out.2026 18:13:44.279] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--gameDir, ., --launchTarget, forge_userdev_data, --assetIndex, 34, --assetsDir, C:\Users\jo_bi\AppData\Roaming\.minecraft\assets, --mod, dirtcheapgolems, --all, --output, C:\Users\jo_bi\OneDrive\Área de Trabalho\projetos\Mods\dirt-cheap-golems\src\generated\resources, --existing, C:\Users\jo_bi\OneDrive\Área de Trabalho\projetos\Mods\dirt-cheap-golems\src\main\resources]
+[09out.2026 18:13:44.282] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: JVM identified as Eclipse Adoptium OpenJDK 64-Bit Server VM 25.0.4.1+1-LTS
+[09out.2026 18:13:44.283] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 10.2.6 starting: java version 25.0.4.1 by Eclipse Adoptium; OS Windows 11 arch amd64 version 10.0
+[09out.2026 18:13:44.419] [main/INFO] [net.minecraftforge.fml.loading.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forge_userdev_data
+[09out.2026 18:13:44.538] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=jar:file:///C:/Users/jo_bi/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.7/8ab114ac385e6dbdad5efafe28aba4df8120915f/mixin-0.8.7.jar!/ Service=ModLauncher Env=UNKNOWN
+[09out.2026 18:13:45.986] [main/INFO] [net.minecraftforge.fml.loading.moddiscovery.JarInJarDependencyLocator/]: No dependencies to load found. Skipping!
+[09out.2026 18:13:46.214] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forge_userdev_data' with arguments [--gameDir, ., --assetsDir, C:\Users\jo_bi\AppData\Roaming\.minecraft\assets, --assetIndex, 34, --mod, dirtcheapgolems, --all, --output, C:\Users\jo_bi\OneDrive\Área de Trabalho\projetos\Mods\dirt-cheap-golems\src\generated\resources, --existing, C:\Users\jo_bi\OneDrive\Área de Trabalho\projetos\Mods\dirt-cheap-golems\src\main\resources]
+[09out.2026 18:13:52.479] [modloading-worker-0/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Forge mod loading, version 66.0.9, for MC 26.3 with MCP 20260918.230105
+[09out.2026 18:13:52.481] [modloading-worker-0/INFO] [net.minecraftforge.common.MinecraftForge/FORGE]: MinecraftForge v66.0.9 Initialized
+[09out.2026 18:13:52.494] [modloading-worker-0/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Opening jdk.naming.dns/com.sun.jndi.dns to java.naming
+[09out.2026 18:13:52.752] [main/INFO] [net.minecraftforge.data.loading.DatagenModLoader/]: Initializing Data Gatherer for mods [dirtcheapgolems]
+[09out.2026 18:13:52.846] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/C:/Users/jo_bi/OneDrive/Área%20de%20Trabalho/projetos/Mods/dirt-cheap-golems/.gradle/mavenizer/repo/net/minecraftforge/forge/26.3-66.0.9/forge-26.3-66.0.9.jar%230!/assets/.mcassetsroot' uses unexpected schema
+[09out.2026 18:13:52.847] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/C:/Users/jo_bi/OneDrive/Área%20de%20Trabalho/projetos/Mods/dirt-cheap-golems/.gradle/mavenizer/repo/net/minecraftforge/forge/26.3-66.0.9/forge-26.3-66.0.9.jar%230!/data/.mcassetsroot' uses unexpected schema
+[09out.2026 18:13:53.084] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Dirt Cheap Golems game test instances
+[09out.2026 18:13:53.096] [main/INFO] [net.minecraft.data.DataGenerator/]: Dirt Cheap Golems game test instances finished after 11 ms
+[09out.2026 18:13:53.096] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Languages: en_us
+[09out.2026 18:13:53.097] [main/INFO] [net.minecraft.data.DataGenerator/]: Languages: en_us finished after 1 ms
+[09out.2026 18:13:53.097] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Languages: pt_br
+[09out.2026 18:13:53.098] [main/INFO] [net.minecraft.data.DataGenerator/]: Languages: pt_br finished after 0 ms
+[09out.2026 18:13:53.098] [main/INFO] [net.minecraft.data.DataGenerator/]: All providers took: 15 ms
+[09out.2026 18:13:53.106] [main/INFO] [net.minecraft.data.HashCache/]: Caching: total files: 28, old count: 28, new count: 28, removed stale: 0, written: 0
