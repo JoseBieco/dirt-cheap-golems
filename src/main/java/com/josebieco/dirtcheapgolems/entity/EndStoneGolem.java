@@ -1,6 +1,8 @@
 package com.josebieco.dirtcheapgolems.entity;
 
 import com.josebieco.dirtcheapgolems.config.GolemConfig;
+import com.josebieco.dirtcheapgolems.entity.ai.CollectItemsGoal;
+import com.josebieco.dirtcheapgolems.entity.ai.HoveringStrollGoal;
 import com.josebieco.dirtcheapgolems.item.GolemCoreItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
@@ -17,7 +19,6 @@ import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MoveTowardsRestrictionGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomFlyingGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
@@ -48,6 +49,7 @@ public class EndStoneGolem extends AbstractCheapGolem {
 
     private @Nullable GlobalPos linkedContainer;
     private int itemsCarried;
+    private boolean collecting;
 
     public EndStoneGolem(EntityType<? extends EndStoneGolem> type, Level level) {
         super(type, level);
@@ -87,9 +89,10 @@ public class EndStoneGolem extends AbstractCheapGolem {
     @Override
     protected void registerGoals() {
         double speed = GolemConfig.endStoneFlySpeed();
+        this.goalSelector.addGoal(4, new CollectItemsGoal(this, speed));
         this.goalSelector.addGoal(5, new MoveTowardsRestrictionGoal(this, speed));
         // The flying stroll respects the home restriction (HoverRandomPos / AirAndWaterRandomPos).
-        this.goalSelector.addGoal(6, new WaterAvoidingRandomFlyingGoal(this, speed));
+        this.goalSelector.addGoal(6, new HoveringStrollGoal(this, speed));
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
     }
@@ -97,9 +100,45 @@ public class EndStoneGolem extends AbstractCheapGolem {
     @Override
     public void tick() {
         super.tick();
+        if (!this.level().isClientSide() && !collecting) hoverNudge();
         if (this.level().isClientSide() && this.getRandom().nextInt(10) == 0)
             this.level().addParticle(ParticleTypes.PORTAL, this.getRandomX(0.5), this.getY(0.5), this.getRandomZ(0.5),
                 0.0, 0.0, 0.0);
+    }
+
+    // ---- idle hover (spec 6.1: 0.5 to 1.5 blocks above the ground) ----
+
+    public static final double HOVER_MIN = 0.5;
+    public static final double HOVER_MAX = 1.5;
+    private static final int GROUND_SCAN_DEPTH = 8;
+
+    /** Set by the collect goal: while flying to an item the hover band is not enforced. */
+    public void setCollecting(boolean collecting) {
+        this.collecting = collecting;
+    }
+
+    /** Height of the top of the first solid block at or below (x, y, z), or NaN if none within 8 blocks. */
+    public double groundHeightAt(double x, double y, double z) {
+        var cursor = new BlockPos.MutableBlockPos();
+        int bx = net.minecraft.util.Mth.floor(x);
+        int bz = net.minecraft.util.Mth.floor(z);
+        int by = net.minecraft.util.Mth.floor(y);
+        for (int i = 0; i <= GROUND_SCAN_DEPTH; i++) {
+            cursor.set(bx, by - i, bz);
+            var shape = this.level().getBlockState(cursor).getCollisionShape(this.level(), cursor);
+            if (!shape.isEmpty()) return cursor.getY() + shape.max(net.minecraft.core.Direction.Axis.Y);
+        }
+        return Double.NaN;
+    }
+
+    /** Gently pushes the golem back into the hover band when it is idle. */
+    private void hoverNudge() {
+        double ground = groundHeightAt(this.getX(), this.getY(), this.getZ());
+        if (Double.isNaN(ground)) return;
+        double height = this.getY() - ground;
+        Vec3 motion = this.getDeltaMovement();
+        if (height < HOVER_MIN + 0.1) this.setDeltaMovement(motion.x, Math.max(motion.y, 0.08), motion.z);
+        else if (height > HOVER_MAX - 0.1) this.setDeltaMovement(motion.x, Math.min(motion.y, -0.08), motion.z);
     }
 
     // ---- container link ----
