@@ -26,6 +26,11 @@ minecraft {
 
             systemProperty 'eventbus.api.strictRuntimeChecks', 'true'
             systemProperty 'forge.enabledGameTestNamespaces', 'dirtcheapgolems'
+
+            // Java 25 warns when Forge's UnsafeHacks uses sun.misc.Unsafe; allow it explicitly.
+            // (The "restricted method / --enable-native-access" warnings can't be silenced from here:
+            // Forge loads LWJGL, JNA and JLine in its own module layer, out of reach of JVM flags.)
+            jvmArgs '--sun-misc-unsafe-memory-access=allow'
         }
 
         register('client')
