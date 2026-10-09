@@ -60,16 +60,43 @@ public final class CommandTests {
         helper.succeed();
     }
 
+    /** Sneaking player looking at the given pitch. Pitch 0 at y=30 is open sky; pitch 90 at y=1 looks at the arena floor. */
+    private static net.minecraft.server.level.ServerPlayer sneakingPlayerLooking(GameTestHelper helper, float xRot, ItemStack stack) {
+        var player = Arena.survivalPlayer(helper, new Vec3(4.5, xRot == 0 ? 30 : 1, 0.5));
+        player.setShiftKeyDown(true);
+        player.setYRot(0);
+        player.setXRot(xRot);
+        player.setItemInHand(InteractionHand.MAIN_HAND, stack);
+        return player;
+    }
+
     @GameTest(structure = Arena.STRUCTURE)
     public static void sneakingInAirClearsLink(GameTestHelper helper) {
-        var player = helper.makeMockServerPlayerFull(GameType.SURVIVAL);
-        player.setShiftKeyDown(true);
+        Arena.floor(helper);
         var stack = linkedCore(helper);
-        player.setItemInHand(InteractionHand.MAIN_HAND, stack);
+        var player = sneakingPlayerLooking(helper, 0, stack);
         helper.assertTrue(GolemCoreItem.getLink(stack) != null, "precondition: core is linked");
         stack.use(helper.getLevel(), player, InteractionHand.MAIN_HAND);
         Arena.removePlayer(helper, player);
         helper.assertTrue(GolemCoreItem.getLink(stack) == null, "link should be cleared");
+        helper.succeed();
+    }
+
+    /** Spec 3.1: sneak-click on a block without inventory does nothing; the follow-up use() must not clear the link. */
+    @GameTest(structure = Arena.STRUCTURE)
+    public static void sneakingOnStoneKeepsLink(GameTestHelper helper) {
+        Arena.floor(helper);
+        var stack = linkedCore(helper);
+        var before = GolemCoreItem.getLink(stack);
+        var player = sneakingPlayerLooking(helper, 90, stack);
+        var abs = helper.absolutePos(new BlockPos(4, 0, 0));
+        var hit = new net.minecraft.world.phys.BlockHitResult(Vec3.atCenterOf(abs), net.minecraft.core.Direction.UP, abs, false);
+        var result = stack.useOn(new net.minecraft.world.item.context.UseOnContext(player, InteractionHand.MAIN_HAND, hit));
+        helper.assertFalse(result.consumesAction(), "stone click should pass");
+        // The game then falls through to use() because the block click was not consumed.
+        stack.use(helper.getLevel(), player, InteractionHand.MAIN_HAND);
+        Arena.removePlayer(helper, player);
+        helper.assertValueEqual(before, GolemCoreItem.getLink(stack), "link", "link kept after clicking stone");
         helper.succeed();
     }
 

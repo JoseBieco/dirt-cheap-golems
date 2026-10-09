@@ -17,6 +17,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import org.jspecify.annotations.Nullable;
 
@@ -69,7 +70,7 @@ public class GolemCoreItem extends Item {
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         var stack = player.getItemInHand(hand);
-        if (player.isShiftKeyDown() && getLink(stack) != null) {
+        if (player.isShiftKeyDown() && getLink(stack) != null && isLookingAtAir(player)) {
             if (!level.isClientSide()) {
                 setLink(stack, null);
                 player.sendOverlayMessage(Component.translatable("message.dirtcheapgolems.core.unlinked"));
@@ -77,6 +78,11 @@ public class GolemCoreItem extends Item {
             return InteractionResult.SUCCESS;
         }
         return super.use(level, player, hand);
+    }
+
+    /** Only a click on air clears the link; a pass-through block click (stone, pillar) must keep it. */
+    private static boolean isLookingAtAir(Player player) {
+        return player.pick(player.blockInteractionRange(), 1.0F, false).getType() == HitResult.Type.MISS;
     }
 
     @Override
