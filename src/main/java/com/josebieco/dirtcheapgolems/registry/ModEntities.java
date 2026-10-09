@@ -3,6 +3,7 @@ package com.josebieco.dirtcheapgolems.registry;
 import com.josebieco.dirtcheapgolems.DirtCheapGolems;
 import com.josebieco.dirtcheapgolems.entity.AbstractCheapGolem;
 import com.josebieco.dirtcheapgolems.entity.DirtGolem;
+import com.josebieco.dirtcheapgolems.entity.NetherrackGolem;
 import com.josebieco.dirtcheapgolems.entity.SandGolem;
 import com.josebieco.dirtcheapgolems.entity.projectile.SandBlast;
 import net.minecraft.world.entity.Entity;
@@ -20,6 +21,12 @@ public final class ModEntities {
 
     public static final RegistryObject<EntityType<DirtGolem>> DIRT_GOLEM = golem("dirt_golem", DirtGolem::new);
     public static final RegistryObject<EntityType<SandGolem>> SAND_GOLEM = golem("sand_golem", SandGolem::new);
+    public static final RegistryObject<EntityType<NetherrackGolem>> NETHERRACK_GOLEM = ENTITIES.register("netherrack_golem",
+        () -> EntityType.Builder.of(NetherrackGolem::new, MobCategory.MISC)
+            .sized(0.6F, 0.9F)
+            .clientTrackingRange(8)
+            .fireImmune()
+            .build(ENTITIES.key("netherrack_golem")));
 
     public static final RegistryObject<EntityType<SandBlast>> SAND_BLAST = ENTITIES.register("sand_blast",
         () -> EntityType.Builder.<SandBlast>of(SandBlast::new, MobCategory.MISC)
@@ -45,5 +52,6 @@ public final class ModEntities {
     private static void createAttributes(EntityAttributeCreationEvent event) {
         event.put(DIRT_GOLEM.get(), AbstractCheapGolem.createBaseAttributes().build());
         event.put(SAND_GOLEM.get(), SandGolem.createAttributes().build());
+        event.put(NETHERRACK_GOLEM.get(), AbstractCheapGolem.createBaseAttributes().build());
     }
 }

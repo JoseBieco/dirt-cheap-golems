@@ -35,6 +35,8 @@ public final class ModLanguageProvider extends LanguageProvider {
         addItem(ModItems.DIRT_GOLEM_SPAWN_EGG, t("Dirt Golem Spawn Egg", "Ovo Gerador de Golem de Terra"));
         addEntityType(ModEntities.SAND_GOLEM, t("Sand Golem", "Golem de Areia"));
         addItem(ModItems.SAND_GOLEM_SPAWN_EGG, t("Sand Golem Spawn Egg", "Ovo Gerador de Golem de Areia"));
+        addEntityType(ModEntities.NETHERRACK_GOLEM, t("Netherrack Golem", "Golem de Netherrack"));
+        addItem(ModItems.NETHERRACK_GOLEM_SPAWN_EGG, t("Netherrack Golem Spawn Egg", "Ovo Gerador de Golem de Netherrack"));
         addEntityType(ModEntities.SAND_BLAST, t("Sand Blast", "Rajada de Areia"));
         addEffect(ModEffects.SAND_IN_EYES, t("Sand in Eyes", "Areia nos Olhos"));
     }

@@ -22,6 +22,7 @@ public final class ModItems {
 
     public static final RegistryObject<Item> DIRT_GOLEM_SPAWN_EGG = spawnEgg("dirt_golem_spawn_egg", ModEntities.DIRT_GOLEM::get);
     public static final RegistryObject<Item> SAND_GOLEM_SPAWN_EGG = spawnEgg("sand_golem_spawn_egg", ModEntities.SAND_GOLEM::get);
+    public static final RegistryObject<Item> NETHERRACK_GOLEM_SPAWN_EGG = spawnEgg("netherrack_golem_spawn_egg", ModEntities.NETHERRACK_GOLEM::get);
 
     private ModItems() {}
 
@@ -40,6 +41,7 @@ public final class ModItems {
         if (event.getTabKey() == CreativeModeTabs.SPAWN_EGGS) {
             event.accept(DIRT_GOLEM_SPAWN_EGG);
             event.accept(SAND_GOLEM_SPAWN_EGG);
+            event.accept(NETHERRACK_GOLEM_SPAWN_EGG);
         }
     }
 }

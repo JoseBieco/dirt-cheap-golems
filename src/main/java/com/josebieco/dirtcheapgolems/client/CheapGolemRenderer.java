@@ -8,7 +8,10 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.EyesLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.resources.Identifier;
 
 /** Renderer shared by every cheap golem; only the texture changes. Adds crack overlays by {@link CrackStage}. */
@@ -19,6 +22,17 @@ public class CheapGolemRenderer<T extends AbstractCheapGolem> extends MobRendere
         super(context, new CheapGolemModel(context.bakeLayer(CheapGolemModel.LAYER)), 0.4F);
         this.texture = texture;
         this.addLayer(new CrackLayer(this));
+    }
+
+    /** Adds a full-bright layer (eyes and glowing cracks), used by the Netherrack Golem. */
+    public void addEmissiveLayer(Identifier glowTexture) {
+        var renderType = RenderTypes.eyes(glowTexture);
+        this.addLayer(new EyesLayer<>(this) {
+            @Override
+            public RenderType renderType() {
+                return renderType;
+            }
+        });
     }
 
     public static Identifier texture(String name) {

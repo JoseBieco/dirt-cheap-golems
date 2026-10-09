@@ -1,6 +1,7 @@
 package com.josebieco.dirtcheapgolems.client;
 
 import com.josebieco.dirtcheapgolems.DirtCheapGolems;
+import com.josebieco.dirtcheapgolems.entity.NetherrackGolem;
 import com.josebieco.dirtcheapgolems.registry.ModEntities;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraftforge.api.distmarker.Dist;
@@ -24,6 +25,11 @@ public final class ClientSetup {
             context -> new CheapGolemRenderer<>(context, CheapGolemRenderer.texture("dirt_golem")));
         event.registerEntityRenderer(ModEntities.SAND_GOLEM.get(),
             context -> new CheapGolemRenderer<>(context, CheapGolemRenderer.texture("sand_golem")));
+        event.registerEntityRenderer(ModEntities.NETHERRACK_GOLEM.get(), context -> {
+            var renderer = new CheapGolemRenderer<NetherrackGolem>(context, CheapGolemRenderer.texture("netherrack_golem"));
+            renderer.addEmissiveLayer(CheapGolemRenderer.texture("netherrack_golem_glow"));
+            return renderer;
+        });
         event.registerEntityRenderer(ModEntities.SAND_BLAST.get(), context -> new ThrownItemRenderer<>(context, 0.5F, false));
     }
 }

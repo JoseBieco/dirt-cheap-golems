@@ -1,9 +1,11 @@
 {
   "effect.dirtcheapgolems.sand_in_eyes": "Sand in Eyes",
   "entity.dirtcheapgolems.dirt_golem": "Dirt Golem",
+  "entity.dirtcheapgolems.netherrack_golem": "Netherrack Golem",
   "entity.dirtcheapgolems.sand_blast": "Sand Blast",
   "entity.dirtcheapgolems.sand_golem": "Sand Golem",
   "item.dirtcheapgolems.dirt_golem_spawn_egg": "Dirt Golem Spawn Egg",
   "item.dirtcheapgolems.golem_core": "Golem Core",
+  "item.dirtcheapgolems.netherrack_golem_spawn_egg": "Netherrack Golem Spawn Egg",
   "item.dirtcheapgolems.sand_golem_spawn_egg": "Sand Golem Spawn Egg"
 }
