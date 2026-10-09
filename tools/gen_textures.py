@@ -31,7 +31,9 @@ PALETTES = {
     "sand": [(219, 207, 163), (227, 216, 175), (206, 193, 149), (196, 180, 134), (232, 224, 189)],
     "netherrack": [(111, 54, 52), (97, 38, 38), (130, 66, 63), (84, 31, 31), (140, 76, 72)],
 }
-EYES = {"dirt": (34, 22, 14), "sand": (92, 74, 40), "netherrack": (255, 170, 40)}
+# end_stone is generated last with its own RNG so adding it never changes the other textures.
+END_STONE_PALETTE = [(219, 222, 158), (207, 210, 144), (228, 231, 172), (196, 199, 131), (233, 235, 187)]
+EYES = {"dirt": (34, 22, 14), "sand": (92, 74, 40), "netherrack": (255, 170, 40), "end_stone": (155, 95, 192)}
 
 
 def write_png(path, width, height, pixels):
@@ -70,7 +72,7 @@ def used_pixels():
 
 def golem_skin(material, rng):
     img = blank(64, 64)
-    palette = PALETTES[material]
+    palette = PALETTES.get(material, END_STONE_PALETTE)
     for x, y in used_pixels():
         img[y][x] = (*rng.choice(palette), 255)
     ex, ey = HEAD_FRONT
@@ -148,4 +150,5 @@ if __name__ == "__main__":
     write_png(os.path.join(ROOT, "item", "golem_core.png"), 16, 16, item_core())
     # Spawn eggs: see tools/gen_spawn_egg.py (one tinted template shared by all golems).
     write_png(os.path.join(ROOT, "mob_effect", "sand_in_eyes.png"), 18, 18, sand_in_eyes_icon(rng))
+    write_png(os.path.join(ROOT, "entity", "end_stone_golem.png"), 64, 64, golem_skin("end_stone", random.Random(5678)))
     print("textures written to", ROOT)

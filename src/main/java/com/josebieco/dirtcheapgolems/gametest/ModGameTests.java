@@ -27,7 +27,8 @@ public final class ModGameTests {
         CommandTests.class,
         DirtGolemTests.class,
         SandGolemTests.class,
-        NetherrackGolemTests.class
+        NetherrackGolemTests.class,
+        EndStoneGolemTests.class
     );
 
     private static final DeferredRegister<Consumer<GameTestHelper>> FUNCTIONS =

@@ -176,14 +176,19 @@ public abstract class AbstractCheapGolem extends AbstractGolem {
         this.crumbleDropChanceOverride = chance;
     }
 
-    /** Particles and break sound of the material, chance-based drop, then removal. No XP. */
-    protected void crumble() {
-        if (!(this.level() instanceof ServerLevel level) || this.isRemoved()) return;
+    /** Particles and sound of crumbling; defaults to the material's block particles and break sound. */
+    protected void playCrumbleEffects(ServerLevel level) {
         var state = getMaterialState();
         level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, state),
             this.getX(), this.getY(0.5), this.getZ(), 30, 0.25, 0.3, 0.25, 0.1);
         level.playSound(null, this.getX(), this.getY(), this.getZ(),
             state.getSoundType().getBreakSound(), SoundSource.NEUTRAL, 1.0F, 0.9F);
+    }
+
+    /** Crumble effects, chance-based drop, then removal. No XP. */
+    protected void crumble() {
+        if (!(this.level() instanceof ServerLevel level) || this.isRemoved()) return;
+        playCrumbleEffects(level);
         if (this.getRandom().nextDouble() < (crumbleDropChanceOverride != null ? crumbleDropChanceOverride : getCrumbleDropChance()))
             this.spawnAtLocation(level, getCrumbleDrop());
         this.discard();

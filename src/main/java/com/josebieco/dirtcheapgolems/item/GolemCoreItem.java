@@ -4,6 +4,7 @@ import com.josebieco.dirtcheapgolems.entity.AbstractCheapGolem;
 import com.josebieco.dirtcheapgolems.golem.GolemActivation;
 import com.josebieco.dirtcheapgolems.registry.ModDataComponents;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -47,6 +48,12 @@ public class GolemCoreItem extends Item {
         }
     }
 
+    /** Whether the block at {@code pos} exposes an item handler (a linkable container). */
+    public static boolean hasInventory(Level level, BlockPos pos) {
+        var blockEntity = level.getBlockEntity(pos);
+        return blockEntity != null && blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent();
+    }
+
     @Override
     public InteractionResult useOn(UseOnContext context) {
         var player = context.getPlayer();
@@ -54,9 +61,7 @@ public class GolemCoreItem extends Item {
         var level = context.getLevel();
         var pos = context.getClickedPos();
         if (player.isShiftKeyDown()) {
-            var blockEntity = level.getBlockEntity(pos);
-            if (blockEntity == null || !blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent())
-                return InteractionResult.PASS;
+            if (!hasInventory(level, pos)) return InteractionResult.PASS;
             if (!level.isClientSide()) {
                 setLink(context.getItemInHand(), GlobalPos.of(level.dimension(), pos));
                 player.sendOverlayMessage(Component.translatable("message.dirtcheapgolems.core.linked",

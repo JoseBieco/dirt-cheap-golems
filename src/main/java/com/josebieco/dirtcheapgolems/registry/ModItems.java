@@ -23,6 +23,7 @@ public final class ModItems {
     public static final RegistryObject<Item> DIRT_GOLEM_SPAWN_EGG = spawnEgg("dirt_golem_spawn_egg", ModEntities.DIRT_GOLEM::get);
     public static final RegistryObject<Item> SAND_GOLEM_SPAWN_EGG = spawnEgg("sand_golem_spawn_egg", ModEntities.SAND_GOLEM::get);
     public static final RegistryObject<Item> NETHERRACK_GOLEM_SPAWN_EGG = spawnEgg("netherrack_golem_spawn_egg", ModEntities.NETHERRACK_GOLEM::get);
+    public static final RegistryObject<Item> END_STONE_GOLEM_SPAWN_EGG = spawnEgg("end_stone_golem_spawn_egg", ModEntities.END_STONE_GOLEM::get);
 
     private ModItems() {}
 
@@ -42,6 +43,7 @@ public final class ModItems {
             event.accept(DIRT_GOLEM_SPAWN_EGG);
             event.accept(SAND_GOLEM_SPAWN_EGG);
             event.accept(NETHERRACK_GOLEM_SPAWN_EGG);
+            event.accept(END_STONE_GOLEM_SPAWN_EGG);
         }
     }
 }

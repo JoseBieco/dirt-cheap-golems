@@ -37,6 +37,13 @@ public final class GolemConfig {
     private static final ForgeConfigSpec.BooleanValue NETHERRACK_BLAST_HURTS_PLAYERS;
     private static final ForgeConfigSpec.DoubleValue NETHERRACK_DROP_CHANCE;
 
+    // end_stone
+    private static final ForgeConfigSpec.IntValue END_STONE_LINK_RANGE;
+    private static final ForgeConfigSpec.IntValue END_STONE_ITEMS_PER_INTEGRITY;
+    private static final ForgeConfigSpec.DoubleValue END_STONE_PICKUP_RANGE;
+    private static final ForgeConfigSpec.DoubleValue END_STONE_FLY_SPEED;
+    private static final ForgeConfigSpec.DoubleValue END_STONE_DROP_CHANCE;
+
     static {
         BUILDER.push("general");
         PASSIVE_DECAY_TICKS = BUILDER.comment("Ticks per -1 passive integrity").defineInRange("passiveDecayTicks", 600, 20, 72000);
@@ -72,6 +79,14 @@ public final class GolemConfig {
         NETHERRACK_BLAST_HURTS_PLAYERS = BUILDER.comment("Whether the thermal blast hurts players").define("blastHurtsPlayers", false);
         NETHERRACK_DROP_CHANCE = BUILDER.comment("Chance to drop charcoal when crumbling").defineInRange("dropChance", 1.0, 0.0, 1.0);
         BUILDER.pop();
+
+        BUILDER.push("end_stone");
+        END_STONE_LINK_RANGE = BUILDER.comment("Max distance (blocks) between the linked container and home").defineInRange("linkRange", 32, 1, 128);
+        END_STONE_ITEMS_PER_INTEGRITY = BUILDER.comment("Items teleported per -1 integrity").defineInRange("itemsPerIntegrity", 4, 1, 64);
+        END_STONE_PICKUP_RANGE = BUILDER.comment("Distance (blocks) at which an item is teleported").defineInRange("pickupRange", 1.5, 0.5, 8.0);
+        END_STONE_FLY_SPEED = BUILDER.comment("Flight speed").defineInRange("flySpeed", 0.4, 0.05, 2.0);
+        END_STONE_DROP_CHANCE = BUILDER.comment("Chance to drop end stone when crumbling").defineInRange("dropChance", 0.5, 0.0, 1.0);
+        BUILDER.pop();
     }
 
     public static final ForgeConfigSpec SPEC = BUILDER.build();
@@ -104,4 +119,10 @@ public final class GolemConfig {
     public static int netherrackBlastCost() { return NETHERRACK_BLAST_COST.get(); }
     public static boolean netherrackBlastHurtsPlayers() { return NETHERRACK_BLAST_HURTS_PLAYERS.get(); }
     public static double netherrackDropChance() { return NETHERRACK_DROP_CHANCE.get(); }
+
+    public static int endStoneLinkRange() { return END_STONE_LINK_RANGE.get(); }
+    public static int endStoneItemsPerIntegrity() { return END_STONE_ITEMS_PER_INTEGRITY.get(); }
+    public static double endStonePickupRange() { return END_STONE_PICKUP_RANGE.get(); }
+    public static double endStoneFlySpeed() { return END_STONE_FLY_SPEED.get(); }
+    public static double endStoneDropChance() { return END_STONE_DROP_CHANCE.get(); }
 }
