@@ -1,0 +1,100 @@
+package com.josebieco.dirtcheapgolems.gametest;
+
+import com.josebieco.dirtcheapgolems.item.GolemCoreItem;
+import com.josebieco.dirtcheapgolems.registry.ModEntities;
+import com.josebieco.dirtcheapgolems.registry.ModItems;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.gametest.GameTest;
+import net.minecraftforge.gametest.GameTestNamespace;
+import net.minecraftforge.gametest.GameTestPrefix;
+
+import static com.josebieco.dirtcheapgolems.gametest.ActivationTests.BOTTOM;
+import static com.josebieco.dirtcheapgolems.gametest.ActivationTests.TOP;
+
+/** Golem Core command mode (spec v2 section 3.1). */
+@GameTestNamespace("dirtcheapgolems")
+@GameTestPrefix("command")
+public final class CommandTests {
+    private static GlobalPos link(GameTestHelper helper, BlockPos relative) {
+        return GlobalPos.of(helper.getLevel().dimension(), helper.absolutePos(relative));
+    }
+
+    private static ItemStack linkedCore(GameTestHelper helper) {
+        var stack = new ItemStack(ModItems.GOLEM_CORE.get(), 1);
+        GolemCoreItem.setLink(stack, link(helper, new BlockPos(1, 1, 1)));
+        return stack;
+    }
+
+    /** V2-T1 */
+    @GameTest(structure = Arena.STRUCTURE)
+    public static void sneakingOnPillarDoesNothing(GameTestHelper helper) {
+        ActivationTests.buildPillar(helper, Blocks.DIRT, Blocks.DIRT);
+        var stack = ActivationTests.useCore(helper, GameType.SURVIVAL, TOP, true);
+        ActivationTests.assertNoGolemAndIntactPillar(helper, stack, Blocks.DIRT, Blocks.DIRT);
+        helper.succeed();
+    }
+
+    /** V2-T2 */
+    @GameTest(structure = Arena.STRUCTURE)
+    public static void sneakingOnChestStoresLink(GameTestHelper helper) {
+        Arena.floor(helper);
+        helper.setBlock(BOTTOM, Blocks.CHEST);
+        var stack = ActivationTests.useCore(helper, GameType.SURVIVAL, BOTTOM, true);
+        helper.assertValueEqual(link(helper, BOTTOM), GolemCoreItem.getLink(stack), "link", "core stores the chest position");
+        helper.assertValueEqual(1, stack.getCount(), "core count", "core must not be consumed");
+        helper.succeed();
+    }
+
+    @GameTest(structure = Arena.STRUCTURE)
+    public static void sneakingOnStoneDoesNotLink(GameTestHelper helper) {
+        Arena.floor(helper);
+        var stack = ActivationTests.useCore(helper, GameType.SURVIVAL, new BlockPos(2, 0, 2), true);
+        helper.assertTrue(GolemCoreItem.getLink(stack) == null, "stone must not be linkable");
+        helper.succeed();
+    }
+
+    @GameTest(structure = Arena.STRUCTURE)
+    public static void sneakingInAirClearsLink(GameTestHelper helper) {
+        var player = helper.makeMockServerPlayerFull(GameType.SURVIVAL);
+        player.setShiftKeyDown(true);
+        var stack = linkedCore(helper);
+        player.setItemInHand(InteractionHand.MAIN_HAND, stack);
+        helper.assertTrue(GolemCoreItem.getLink(stack) != null, "precondition: core is linked");
+        stack.use(helper.getLevel(), player, InteractionHand.MAIN_HAND);
+        Arena.removePlayer(helper, player);
+        helper.assertTrue(GolemCoreItem.getLink(stack) == null, "link should be cleared");
+        helper.succeed();
+    }
+
+    /** Review Focus 3: base golems ignore the command. */
+    @GameTest(structure = Arena.STRUCTURE)
+    public static void commandOnDirtGolemIsIgnored(GameTestHelper helper) {
+        Arena.floor(helper);
+        var golem = helper.spawn(ModEntities.DIRT_GOLEM.get(), new BlockPos(2, 1, 2));
+        var player = helper.makeMockServerPlayer(GameType.SURVIVAL);
+        player.setShiftKeyDown(true);
+        var stack = linkedCore(helper);
+        var before = GolemCoreItem.getLink(stack);
+        player.setItemInHand(InteractionHand.MAIN_HAND, stack);
+        player.interactOn(golem, InteractionHand.MAIN_HAND, Vec3.ZERO);
+        helper.assertValueEqual(before, GolemCoreItem.getLink(stack), "link", "link is unchanged");
+        helper.assertValueEqual(1, stack.getCount(), "core count", "core must not be consumed");
+        helper.assertTrue(golem.getIntegrity() >= 99, "golem integrity untouched");
+        helper.succeed();
+    }
+
+    @GameTest(structure = Arena.STRUCTURE)
+    public static void normalClickStillActivates(GameTestHelper helper) {
+        ActivationTests.buildPillar(helper, Blocks.DIRT, Blocks.DIRT);
+        ActivationTests.useCore(helper, GameType.SURVIVAL, TOP, false);
+        helper.assertEntitiesPresent(ModEntities.DIRT_GOLEM.get(), 1);
+        helper.succeed();
+    }
+}

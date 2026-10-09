@@ -7,5 +7,8 @@
   "item.dirtcheapgolems.dirt_golem_spawn_egg": "Dirt Golem Spawn Egg",
   "item.dirtcheapgolems.golem_core": "Golem Core",
   "item.dirtcheapgolems.netherrack_golem_spawn_egg": "Netherrack Golem Spawn Egg",
-  "item.dirtcheapgolems.sand_golem_spawn_egg": "Sand Golem Spawn Egg"
+  "item.dirtcheapgolems.sand_golem_spawn_egg": "Sand Golem Spawn Egg",
+  "message.dirtcheapgolems.core.linked": "Linked to %s",
+  "message.dirtcheapgolems.core.unlinked": "Link cleared",
+  "tooltip.dirtcheapgolems.core.linked": "Linked to: %s, %s, %s (%s)"
 }

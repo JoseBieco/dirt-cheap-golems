@@ -3,6 +3,7 @@ package com.josebieco.dirtcheapgolems;
 import com.josebieco.dirtcheapgolems.config.GolemConfig;
 import com.josebieco.dirtcheapgolems.datagen.DataGenerators;
 import com.josebieco.dirtcheapgolems.gametest.ModGameTests;
+import com.josebieco.dirtcheapgolems.registry.ModDataComponents;
 import com.josebieco.dirtcheapgolems.registry.ModEffects;
 import com.josebieco.dirtcheapgolems.registry.ModEntities;
 import com.josebieco.dirtcheapgolems.registry.ModItems;
@@ -19,6 +20,7 @@ public final class DirtCheapGolems {
         var modBusGroup = context.getModBusGroup();
 
         ModEntities.register(modBusGroup);
+        ModDataComponents.register(modBusGroup);
         ModItems.register(modBusGroup);
         ModEffects.register(modBusGroup);
         ModGameTests.register(modBusGroup);

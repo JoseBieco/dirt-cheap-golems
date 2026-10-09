@@ -7,5 +7,8 @@
   "item.dirtcheapgolems.dirt_golem_spawn_egg": "Ovo Gerador de Golem de Terra",
   "item.dirtcheapgolems.golem_core": "Núcleo de Golem",
   "item.dirtcheapgolems.netherrack_golem_spawn_egg": "Ovo Gerador de Golem de Netherrack",
-  "item.dirtcheapgolems.sand_golem_spawn_egg": "Ovo Gerador de Golem de Areia"
+  "item.dirtcheapgolems.sand_golem_spawn_egg": "Ovo Gerador de Golem de Areia",
+  "message.dirtcheapgolems.core.linked": "Vinculado a %s",
+  "message.dirtcheapgolems.core.unlinked": "Vínculo removido",
+  "tooltip.dirtcheapgolems.core.linked": "Vinculado a: %s, %s, %s (%s)"
 }

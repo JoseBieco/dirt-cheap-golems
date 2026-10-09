@@ -37,6 +37,9 @@ public final class ModLanguageProvider extends LanguageProvider {
         addItem(ModItems.SAND_GOLEM_SPAWN_EGG, t("Sand Golem Spawn Egg", "Ovo Gerador de Golem de Areia"));
         addEntityType(ModEntities.NETHERRACK_GOLEM, t("Netherrack Golem", "Golem de Netherrack"));
         addItem(ModItems.NETHERRACK_GOLEM_SPAWN_EGG, t("Netherrack Golem Spawn Egg", "Ovo Gerador de Golem de Netherrack"));
+        add("message.dirtcheapgolems.core.linked", t("Linked to %s", "Vinculado a %s"));
+        add("message.dirtcheapgolems.core.unlinked", t("Link cleared", "V\u00ednculo removido"));
+        add("tooltip.dirtcheapgolems.core.linked", t("Linked to: %s, %s, %s (%s)", "Vinculado a: %s, %s, %s (%s)"));
         addEntityType(ModEntities.SAND_BLAST, t("Sand Blast", "Rajada de Areia"));
         addEffect(ModEffects.SAND_IN_EYES, t("Sand in Eyes", "Areia nos Olhos"));
     }

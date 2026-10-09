@@ -10,6 +10,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
@@ -151,6 +152,30 @@ public abstract class AbstractCheapGolem extends AbstractGolem {
 
     protected abstract double getCrumbleDropChance();
 
+    private @Nullable Double crumbleDropChanceOverride;
+
+    /** Called after activation with the player who used the core. */
+    protected void onCreatedBy(Player player) {}
+
+    /** Called after activation with the material of the bottom pillar block (captured before removal). */
+    protected void onCreatedFrom(BlockState bottom) {}
+
+    /** Activation entry point (GolemActivation lives in another package): runs both creation hooks in order. */
+    public final void notifyCreated(BlockState bottom, Player player) {
+        onCreatedFrom(bottom);
+        onCreatedBy(player);
+    }
+
+    /** Sneak-click with a Golem Core (spec v2 section 3.2). Base golems ignore it. */
+    public InteractionResult receiveCommand(Player player, ItemStack core) {
+        return InteractionResult.PASS;
+    }
+
+    /** Test hook: when non-null, replaces {@link #getCrumbleDropChance()} in {@link #crumble()}. */
+    public void setCrumbleDropChanceOverride(@Nullable Double chance) {
+        this.crumbleDropChanceOverride = chance;
+    }
+
     /** Particles and break sound of the material, chance-based drop, then removal. No XP. */
     protected void crumble() {
         if (!(this.level() instanceof ServerLevel level) || this.isRemoved()) return;
@@ -159,7 +184,7 @@ public abstract class AbstractCheapGolem extends AbstractGolem {
             this.getX(), this.getY(0.5), this.getZ(), 30, 0.25, 0.3, 0.25, 0.1);
         level.playSound(null, this.getX(), this.getY(), this.getZ(),
             state.getSoundType().getBreakSound(), SoundSource.NEUTRAL, 1.0F, 0.9F);
-        if (this.getRandom().nextDouble() < getCrumbleDropChance())
+        if (this.getRandom().nextDouble() < (crumbleDropChanceOverride != null ? crumbleDropChanceOverride : getCrumbleDropChance()))
             this.spawnAtLocation(level, getCrumbleDrop());
         this.discard();
     }
