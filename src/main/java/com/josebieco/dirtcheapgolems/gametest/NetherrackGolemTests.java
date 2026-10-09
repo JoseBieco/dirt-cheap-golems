@@ -36,6 +36,14 @@ public final class NetherrackGolemTests {
         return count;
     }
 
+    @GameTest(structure = Arena.STRUCTURE)
+    public static void golemFromNetherrackPillar(GameTestHelper helper) {
+        ActivationTests.buildPillar(helper, Blocks.NETHERRACK, Blocks.NETHERRACK);
+        ActivationTests.useCore(helper, net.minecraft.world.level.GameType.SURVIVAL, ActivationTests.TOP);
+        helper.assertEntitiesPresent(ModEntities.NETHERRACK_GOLEM.get(), 1);
+        helper.succeed();
+    }
+
     // ---- walking light (spec §6.3) ----
 
     @GameTest(structure = Arena.STRUCTURE)

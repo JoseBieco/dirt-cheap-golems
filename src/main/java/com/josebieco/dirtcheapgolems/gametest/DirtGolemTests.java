@@ -94,7 +94,9 @@ public final class DirtGolemTests {
         var a = golemAt(helper, 2, 4);
         var b = golemAt(helper, 6, 4);
         helper.runAfterDelay(200, () -> {
-            helper.assertValueEqual(0, age(helper, crop), "wheat age", "harvested and replanted");
+            // Random ticks may already have grown the replanted wheat a stage.
+            helper.assertBlockPresent(Blocks.WHEAT, crop);
+            helper.assertTrue(age(helper, crop) < 7, "crop should have been harvested and replanted");
             // Passive decay (600 ticks) cannot happen within 200 ticks, so all loss comes from harvesting.
             int lost = (100 - a.getIntegrity()) + (100 - b.getIntegrity());
             helper.assertValueEqual(1, lost, "integrity lost", "exactly one harvest");
