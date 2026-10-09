@@ -1,47 +1,125 @@
 # Dirt Cheap Golems
 
-A Minecraft **26.3** / Forge **66.0.9** mod that turns cheap, abundant blocks into small, temporary servant golems.
-Every golem has one job tied to its material and one way of wearing out — they never last forever, so you keep
-building new ones.
+![Dirt Cheap Golems Banner](docs/assets/banner.jpg)
+
+[Português (Brasil)](README.pt-BR.md)
+
+> Turn the blocks nobody wants (dirt, sand, netherrack) into tiny servant golems. They work hard, wear out, and you build more.
+
+**Minecraft 26.3 · Forge 66.0.9 · v1.0.0**
+
+Every survival world ends up with chests full of dirt, sand and netherrack. Dirt Cheap Golems gives those blocks a job: two blocks and a cheap core become a small golem that farms, defends or lights up your base. The catch: **golems are disposable**. They wear out as they work, as time passes and when the weather turns against them, so you keep coming back for more blocks.
+
+---
 
 ## Golem Core
 
-Craft it (yields **2**):
+The only crafted item in the mod. It brings a pillar of blocks to life.
 
-```
- . C .
- C R C      C = clay ball, R = redstone dust
- . C .
-```
+![Crafting Recipe](docs/assets/crafting.png)
+
+| | | |
+|:-:|:-:|:-:|
+| | Clay Ball | |
+| Clay Ball | Redstone Dust | Clay Ball |
+| | Clay Ball | |
+
+**Yields 2 Golem Cores.**
 
 ## Creating a golem
 
-Stack **two blocks of the same material** and use a Golem Core on either of them. The pillar disappears and a
-golem appears where the bottom block was; that spot becomes its **home**. Mixed pillars (e.g. dirt on sand) do nothing.
-Players who can't build there (adventure mode, spawn protection) can't create golems.
+1. Stack **two blocks of the same material**, one on top of the other.
+2. Use a **Golem Core** on either block.
+3. The pillar disappears and the golem appears where the bottom block was. That spot becomes its **home**.
 
-| Material (block tag) | Golem | Job | Wears out by |
-|---|---|---|---|
-| `dirt`, `coarse_dirt` (`#dirtcheapgolems:materials/dirt`) | **Dirt Golem** | Harvests mature crops (wheat, carrots, potatoes, beetroot…) around its home and replants them. Never tramples farmland. | 1 integrity per harvest; melts in rain (2/s) and water (4/s) — it seeks shelter when it rains |
-| `sand`, `red_sand` (`#dirtcheapgolems:materials/sand`) | **Sand Golem** | Stationary turret: shoots sand at hostile mobs in sight (Slowness II + *Sand in Eyes*, which makes mobs lose their target and 75% of their follow range). Never moves. | 2 integrity per shot |
-| `netherrack` (`#dirtcheapgolems:materials/netherrack`) | **Netherrack Golem** | Walking light (light level 12). Charges hostiles and releases a thermal blast that burns them — no block damage, never hurts players, golems or passive mobs. Fire immune. | 34 integrity per blast; turns into **stone** in water or rain |
+- Mixed pillars (e.g. dirt on top of sand) do nothing, and the core is not consumed.
+- In creative mode the core is not consumed.
+- Players who can't build at that spot (adventure mode, spawn protection) can't create golems.
 
-### Integrity
+| Material | Golem |
+|---|---|
+| Dirt, Coarse Dirt | Dirt Golem |
+| Sand, Red Sand | Sand Golem |
+| Netherrack | Netherrack Golem |
 
-Every golem has **integrity** (0–100), separate from health. It only goes down: by working, by its environmental
-weakness and passively (−1 every 30 s). At 0 — or when its health runs out — the golem crumbles, possibly
-dropping its material (charcoal for netherrack). Cracks show up at 66 and 33 integrity. There is no repair.
+---
 
-Golems stay within 16 blocks of their home. They never attack players, other golems or passive mobs.
+## The golems
+
+### Dirt Golem: the Farmhand
+
+![Dirt Golem](docs/assets/dirt_golem.jpg)
+
+Wanders around its home looking for **mature crops** (wheat, carrots, potatoes, beetroot), harvests them and **replants** using one seed from the drops. Everything else stays on the ground for you to collect. It never tramples farmland.
+
+- **Wears out:** 1 integrity per harvest.
+- **Weakness:** it **melts in rain** (−2 integrity/s) and in water (−4/s). When it starts raining it looks for a covered spot nearby and stops harvesting until the rain is over.
+- **Crumbles into:** 50% chance of 1 Dirt.
+
+### Sand Golem: the Turret
+
+![Sand Golem](docs/assets/sand_golem.jpg)
+
+A stationary defense tower. It **never moves** and can't be knocked back. It fires sand blasts at **hostile mobs** within 12 blocks that it can see. Blasts fly through players, villagers and other friendly mobs.
+
+Each hit deals 1 damage and applies:
+- **Slowness II** for 4 s.
+- **Sand in Eyes** for 3 s: the mob **loses its target** and its follow range drops by **75%**.
+
+- **Wears out:** 2 integrity per shot (about 45 shots).
+- **Weakness:** none. It's the sturdiest golem; it pays with every shot.
+- **Crumbles into:** 50% chance of 1 Sand.
+
+### Netherrack Golem: the Thermal Kamikaze
+
+![Netherrack Golem](docs/assets/netherrack_golem.jpg)
+
+A **walking light** (light level 12) that patrols your base. When a hostile mob comes within 10 blocks, it charges, hugs it and, after a short hiss, releases a **thermal blast**: 4 fire damage and 5 s of burning to every hostile mob within 3 blocks.
+
+- The blast **never breaks blocks** or starts fires, and never hurts players, golems or passive mobs.
+- The golem is immune to fire and lava.
+- **Wears out:** 34 integrity per blast. **3 blasts and it's ash.**
+- **Weakness:** if it touches **water or rain**, it instantly turns into a block of **Stone**.
+- **Crumbles into:** 1 Charcoal.
+
+---
+
+## Integrity: why golems don't last
+
+Each golem has **integrity** (0–100), separate from its health.
+
+- It **only goes down**: by working, by its weakness, and passively (−1 every 30 s, roughly 50 minutes if idle).
+- Healing and potions restore health, **never** integrity. There is no repair.
+- **Cracks** appear on the golem at 66 and at 33 integrity.
+- At 0 integrity, or when its health runs out, the golem **crumbles** and may drop part of its material.
+
+Golems stay within **16 blocks of their home**, and they never attack players, other golems or passive mobs.
 
 ## Configuration
 
-`config/dirtcheapgolems-common.toml` — every balancing number (decay rate, home radius, costs, ranges, damage,
-durations, drop chances…) is configurable with sane bounds. Material tags can be changed with a datapack.
+Every balancing number is in `config/dirtcheapgolems-common.toml`, with safe limits: passive decay, home radius, cost of each action, ranges, damage, effect durations and drop chances.
+
+Which blocks create each golem is controlled by block tags and can be changed with a datapack:
+
+| Tag | Default |
+|---|---|
+| `#dirtcheapgolems:materials/dirt` | `dirt`, `coarse_dirt` |
+| `#dirtcheapgolems:materials/sand` | `sand`, `red_sand` |
+| `#dirtcheapgolems:materials/netherrack` | `netherrack` |
+
+## Roadmap
+
+Planned golems (concept only, not implemented yet):
+
+- **End Stone Golem:** links to a chest, vacuums dropped items and teleports them inside; every item costs integrity.
+- **Gravel Golem:** wall artillery that throws pieces of itself and can collapse onto an enemy.
+- **Basalt / Deepslate Golem:** a living shield that intercepts arrows and fireballs aimed at you.
+
+---
 
 ## Development
 
-Requires JDK 21+ to launch Gradle; the build uses a Java 25 toolchain (downloaded automatically).
+Requires JDK 21+ to launch Gradle; the build uses a Java 25 toolchain (downloaded automatically). On Windows use `gradlew.bat`.
 
 | Command | What it does |
 |---|---|
@@ -51,9 +129,12 @@ Requires JDK 21+ to launch Gradle; the build uses a Java 25 toolchain (downloade
 | `gradlew runGameTestServer` | Runs all GameTests on a dedicated server; exits non-zero on failure |
 | `gradlew runClient` / `gradlew runServer` | Dev client / dedicated server |
 
-**Run `gradlew runData` before `runGameTestServer` whenever a GameTest is added or renamed** — see
-[`gametest/README.md`](src/main/java/com/josebieco/dirtcheapgolems/gametest/README.md) for how tests are registered.
+**Run `gradlew runData` before `runGameTestServer` whenever a GameTest is added or renamed.** See [`gametest/README.md`](src/main/java/com/josebieco/dirtcheapgolems/gametest/README.md) for how tests are registered.
 
-Placeholder textures are generated by `python tools/gen_textures.py` (original procedural art; replace freely).
+Placeholder textures are generated by `python tools/gen_textures.py`.
 
-Design spec: [`docs/specs/2026-10-09-dirt-cheap-golems-design.md`](docs/specs/2026-10-09-dirt-cheap-golems-design.md).
+Design spec: [`docs/specs/2026-10-09-dirt-cheap-golems-design.md`](docs/specs/2026-10-09-dirt-cheap-golems-design.md)
+
+## Author
+
+José Eduardo Saroba Bieco
