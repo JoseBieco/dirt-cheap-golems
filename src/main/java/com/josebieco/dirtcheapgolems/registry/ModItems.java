@@ -21,6 +21,7 @@ public final class ModItems {
         () -> new GolemCoreItem(new Item.Properties().setId(ITEMS.key("golem_core"))));
 
     public static final RegistryObject<Item> DIRT_GOLEM_SPAWN_EGG = spawnEgg("dirt_golem_spawn_egg", ModEntities.DIRT_GOLEM::get);
+    public static final RegistryObject<Item> SAND_GOLEM_SPAWN_EGG = spawnEgg("sand_golem_spawn_egg", ModEntities.SAND_GOLEM::get);
 
     private ModItems() {}
 
@@ -36,7 +37,9 @@ public final class ModItems {
     private static void addCreative(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.INGREDIENTS)
             event.accept(GOLEM_CORE);
-        if (event.getTabKey() == CreativeModeTabs.SPAWN_EGGS)
+        if (event.getTabKey() == CreativeModeTabs.SPAWN_EGGS) {
             event.accept(DIRT_GOLEM_SPAWN_EGG);
+            event.accept(SAND_GOLEM_SPAWN_EGG);
+        }
     }
 }

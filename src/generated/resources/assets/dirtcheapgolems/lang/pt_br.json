@@ -1,5 +1,9 @@
 {
+  "effect.dirtcheapgolems.sand_in_eyes": "Areia nos Olhos",
   "entity.dirtcheapgolems.dirt_golem": "Golem de Terra",
+  "entity.dirtcheapgolems.sand_blast": "Rajada de Areia",
+  "entity.dirtcheapgolems.sand_golem": "Golem de Areia",
   "item.dirtcheapgolems.dirt_golem_spawn_egg": "Ovo Gerador de Golem de Terra",
-  "item.dirtcheapgolems.golem_core": "Núcleo de Golem"
+  "item.dirtcheapgolems.golem_core": "Núcleo de Golem",
+  "item.dirtcheapgolems.sand_golem_spawn_egg": "Ovo Gerador de Golem de Areia"
 }

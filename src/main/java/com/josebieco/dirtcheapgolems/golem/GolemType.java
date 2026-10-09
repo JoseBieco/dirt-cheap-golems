@@ -15,7 +15,7 @@ import java.util.function.Supplier;
 /** Maps a material tag to the golem built from it. */
 public enum GolemType {
     DIRT(ModTags.Blocks.MATERIAL_DIRT, () -> ModEntities.DIRT_GOLEM.get()),
-    SAND(ModTags.Blocks.MATERIAL_SAND, () -> null),
+    SAND(ModTags.Blocks.MATERIAL_SAND, () -> ModEntities.SAND_GOLEM.get()),
     NETHERRACK(ModTags.Blocks.MATERIAL_NETHERRACK, () -> null);
 
     private final TagKey<Block> material;

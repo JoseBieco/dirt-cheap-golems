@@ -2,6 +2,7 @@ package com.josebieco.dirtcheapgolems.client;
 
 import com.josebieco.dirtcheapgolems.DirtCheapGolems;
 import com.josebieco.dirtcheapgolems.registry.ModEntities;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
@@ -21,5 +22,8 @@ public final class ClientSetup {
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.DIRT_GOLEM.get(),
             context -> new CheapGolemRenderer<>(context, CheapGolemRenderer.texture("dirt_golem")));
+        event.registerEntityRenderer(ModEntities.SAND_GOLEM.get(),
+            context -> new CheapGolemRenderer<>(context, CheapGolemRenderer.texture("sand_golem")));
+        event.registerEntityRenderer(ModEntities.SAND_BLAST.get(), context -> new ThrownItemRenderer<>(context, 0.5F, false));
     }
 }
