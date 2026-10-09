@@ -169,6 +169,25 @@ public final class DirtGolemTests {
         });
     }
 
+    /** Spec §6.1: shelter has priority over harvesting, so an exposed crop is left alone while it rains. */
+    @GameTest(structure = Arena.STRUCTURE, environment = "rain", skyAccess = true, maxTicks = 300)
+    public static void doesNotHarvestInRain(GameTestHelper helper) {
+        Arena.floor(helper);
+        Arena.rainyBiome(helper);
+        for (int x = 0; x < 9; x++)
+            for (int z = 0; z < 4; z++)
+                helper.setBlock(new BlockPos(x, 3, z), Blocks.STONE);   // roof over the z < 4 half
+        var golem = golemAt(helper, 4, 1);
+        NetherrackGolemTests.whenFirst(helper, () -> helper.getLevel().isRaining(), () -> {
+            var crop = plant(helper, 4, 6, Blocks.WHEAT, 7);
+            helper.runAfterDelay(150, () -> {
+                helper.assertValueEqual(7, age(helper, crop), "wheat age", "exposed crop must not be harvested in rain");
+                helper.assertValueEqual(100, golem.getIntegrity(), "integrity", "golem stayed sheltered");
+                helper.succeed();
+            });
+        });
+    }
+
     /** Spec §6.1: while it rains the golem walks to a covered spot within its home radius. */
     @GameTest(structure = Arena.STRUCTURE, environment = "rain", skyAccess = true, maxTicks = 200)
     public static void seeksShelterInRain(GameTestHelper helper) {

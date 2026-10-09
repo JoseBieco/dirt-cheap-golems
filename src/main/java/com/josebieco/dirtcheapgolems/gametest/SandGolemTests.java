@@ -108,6 +108,20 @@ public final class SandGolemTests {
         });
     }
 
+    /** Spec §5.8: a passive mob in the line of fire is never hurt; the blast flies through it. */
+    @GameTest(structure = Arena.STRUCTURE, maxTicks = 100)
+    public static void blastSparesPassiveMobs(GameTestHelper helper) {
+        Arena.floor(helper);
+        var husk = helper.spawnWithNoFreeWill(EntityTypes.HUSK, new BlockPos(8, 1, 4));
+        var villager = helper.spawnWithNoFreeWill(EntityTypes.VILLAGER, new BlockPos(4, 1, 4));
+        sandGolem(helper, new BlockPos(0, 1, 4));
+        helper.succeedWhen(() -> {
+            helper.assertTrue(husk.hasEffect(ModEffects.sandInEyes()), "husk behind the villager should be hit");
+            helper.assertFalse(villager.hasEffect(MobEffects.SLOWNESS), "villager must not be slowed");
+            helper.assertValueEqual(villager.getMaxHealth(), villager.getHealth(), "villager health", "villager must not be hurt");
+        });
+    }
+
     @GameTest(structure = Arena.STRUCTURE)
     public static void golemFromSandPillar(GameTestHelper helper) {
         ActivationTests.buildPillar(helper, Blocks.RED_SAND, Blocks.SAND);

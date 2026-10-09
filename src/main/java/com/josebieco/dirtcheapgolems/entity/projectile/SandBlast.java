@@ -14,6 +14,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.golem.IronGolem;
 import net.minecraft.world.entity.animal.golem.SnowGolem;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
@@ -24,7 +25,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 
-/** Sand Golem projectile (spec §6.2): small damage, Slowness II and Sand in Eyes. Flies through players and golems. */
+/** Sand Golem projectile (spec §6.2): small damage, Slowness II and Sand in Eyes. Flies through anything not hostile. */
 public class SandBlast extends ThrowableItemProjectile {
     public static final float SPEED = 1.5F;
 
@@ -46,15 +47,18 @@ public class SandBlast extends ThrowableItemProjectile {
         return 0.01;
     }
 
-    /** Never collides with players or golems: the blast passes through them. */
-    public static boolean isFriendly(Entity entity) {
-        return entity instanceof Player || entity instanceof AbstractCheapGolem
-            || entity instanceof IronGolem || entity instanceof SnowGolem;
+    /**
+     * Only hostile mobs stop the blast; it passes through players, golems and passive mobs (spec §5.8).
+     * Golems are checked explicitly in case another mod marks one as an {@link Enemy}.
+     */
+    public static boolean isValidTarget(Entity entity) {
+        return entity instanceof Enemy && !(entity instanceof Player) && !(entity instanceof AbstractCheapGolem)
+            && !(entity instanceof IronGolem) && !(entity instanceof SnowGolem);
     }
 
     @Override
     protected boolean canHitEntity(Entity entity) {
-        return !isFriendly(entity) && super.canHitEntity(entity);
+        return isValidTarget(entity) && super.canHitEntity(entity);
     }
 
     @Override
@@ -69,7 +73,7 @@ public class SandBlast extends ThrowableItemProjectile {
     protected void onHitEntity(EntityHitResult hitResult) {
         super.onHitEntity(hitResult);
         if (!(this.level() instanceof ServerLevel level)) return;
-        if (!(hitResult.getEntity() instanceof LivingEntity target) || isFriendly(target)) return;
+        if (!(hitResult.getEntity() instanceof LivingEntity target) || !isValidTarget(target)) return;
         target.hurtServer(level, this.damageSources().thrown(this, this.getOwner()), (float) GolemConfig.sandDamage());
         target.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, GolemConfig.sandSlownessTicks(), 1), this.getOwner());
         target.addEffect(new MobEffectInstance(ModEffects.sandInEyes(), GolemConfig.sandInEyesTicks()), this.getOwner());

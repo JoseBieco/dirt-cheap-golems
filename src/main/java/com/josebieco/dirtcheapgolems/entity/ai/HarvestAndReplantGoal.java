@@ -42,7 +42,8 @@ public class HarvestAndReplantGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return target != null && ticksRunning < GIVE_UP_TICKS && isMatureCrop(golem.level().getBlockState(target));
+        return target != null && ticksRunning < GIVE_UP_TICKS && isMatureCrop(golem.level().getBlockState(target))
+            && !isRainedOn(target);
     }
 
     @Override
@@ -92,11 +93,16 @@ public class HarvestAndReplantGoal extends Goal {
             if (home != null && home.distSqr(pos) > homeRadiusSqr) continue;
             double dist = origin.distSqr(pos);
             if (dist > (double) radius * radius || dist >= bestDist) continue;
-            if (!isMatureCrop(level.getBlockState(pos))) continue;
+            if (!isMatureCrop(level.getBlockState(pos)) || isRainedOn(pos)) continue;
             best = pos.immutable();
             bestDist = dist;
         }
         return best;
+    }
+
+    /** Spec §6.1: sheltering from rain beats harvesting, so crops out in the rain wait. */
+    private boolean isRainedOn(BlockPos crop) {
+        return golem.level().isRainingAt(crop.above());
     }
 
     private static boolean isMatureCrop(BlockState state) {
