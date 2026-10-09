@@ -10,5 +10,7 @@ public final class DataGenerators {
         var output = generator.getPackOutput();
 
         generator.addProvider(event.includeServer(), new GameTestInstanceProvider(output));
+        generator.addProvider(event.includeClient(), ModLanguageProvider.english(output));
+        generator.addProvider(event.includeClient(), ModLanguageProvider.portuguese(output));
     }
 }
