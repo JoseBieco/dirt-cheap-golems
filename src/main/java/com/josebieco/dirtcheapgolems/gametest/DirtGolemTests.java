@@ -113,4 +113,71 @@ public final class DirtGolemTests {
             helper.succeed();
         });
     }
+
+    // ---- rain and water (spec §6.1). Rain tests run in their own batch via the "rain" test environment. ----
+
+    /** Ticks after which exactly two once-per-second environment checks have happened. */
+    private static final int TWO_SECONDS = 45;
+
+    static void assertLostAbout(GameTestHelper helper, DirtGolem golem, int expectedLoss) {
+        int lost = 100 - golem.getIntegrity();
+        helper.assertTrue(Math.abs(lost - expectedLoss) <= 1,
+            () -> "expected integrity loss " + expectedLoss + " (±1) but was " + lost);
+    }
+
+    /** T5: water drains integrity at twice the rain rate (2 × 2 per second). */
+    @GameTest(structure = Arena.STRUCTURE, maxTicks = 60)
+    public static void waterDoublesDecay(GameTestHelper helper) {
+        Arena.floor(helper);
+        var pool = new BlockPos(4, 1, 4);
+        for (var dir : net.minecraft.core.Direction.Plane.HORIZONTAL)
+            for (int y = 1; y <= 2; y++)
+                helper.setBlock(pool.relative(dir).atY(y), Blocks.STONE);
+        helper.setBlock(pool, Blocks.WATER);
+        var golem = helper.spawn(ModEntities.DIRT_GOLEM.get(), pool);
+        golem.setNoAi(true);
+        helper.runAfterDelay(TWO_SECONDS, () -> {
+            helper.assertTrue(golem.isInWater(), "golem should be in water");
+            assertLostAbout(helper, golem, 8);
+            helper.succeed();
+        });
+    }
+
+    @GameTest(structure = Arena.STRUCTURE, environment = "rain", skyAccess = true, maxTicks = 60)
+    public static void rainDecays(GameTestHelper helper) {
+        Arena.floor(helper);
+        Arena.rainyBiome(helper);
+        var golem = helper.spawn(ModEntities.DIRT_GOLEM.get(), new BlockPos(4, 1, 4));
+        golem.setNoAi(true);
+        helper.runAfterDelay(TWO_SECONDS, () -> {
+            helper.assertTrue(helper.getLevel().isRainingAt(golem.blockPosition().above()), "it should be raining on the golem");
+            assertLostAbout(helper, golem, 4);
+            helper.succeed();
+        });
+    }
+
+    @GameTest(structure = Arena.STRUCTURE, environment = "rain", skyAccess = true, maxTicks = 60)
+    public static void shelteredFromRainDoesNotDecay(GameTestHelper helper) {
+        Arena.floor(helper);
+        Arena.rainyBiome(helper);
+        helper.makeFloor(Blocks.STONE, 3);
+        var golem = helper.spawn(ModEntities.DIRT_GOLEM.get(), new BlockPos(4, 1, 4));
+        helper.runAfterDelay(TWO_SECONDS, () -> {
+            helper.assertValueEqual(100, golem.getIntegrity(), "integrity", "sheltered golem");
+            helper.succeed();
+        });
+    }
+
+    /** Spec §6.1: while it rains the golem walks to a covered spot within its home radius. */
+    @GameTest(structure = Arena.STRUCTURE, environment = "rain", skyAccess = true, maxTicks = 200)
+    public static void seeksShelterInRain(GameTestHelper helper) {
+        Arena.floor(helper);
+        Arena.rainyBiome(helper);
+        for (int x = 0; x < 9; x++)
+            for (int z = 0; z < 4; z++)
+                helper.setBlock(new BlockPos(x, 3, z), Blocks.STONE);   // roof over the z < 4 half
+        var golem = golemAt(helper, 4, 7);
+        helper.succeedWhen(() -> helper.assertFalse(helper.getLevel().canSeeSky(golem.blockPosition().above()),
+            "golem should be under the roof"));
+    }
 }

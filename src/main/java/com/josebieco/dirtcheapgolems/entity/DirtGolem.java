@@ -2,6 +2,7 @@ package com.josebieco.dirtcheapgolems.entity;
 
 import com.josebieco.dirtcheapgolems.config.GolemConfig;
 import com.josebieco.dirtcheapgolems.entity.ai.HarvestAndReplantGoal;
+import com.josebieco.dirtcheapgolems.entity.ai.SeekShelterFromRainGoal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
@@ -17,10 +18,25 @@ public class DirtGolem extends AbstractCheapGolem {
         super(type, level);
     }
 
+    private int environmentTicks;
+
     @Override
     protected void registerGoals() {
         super.registerGoals();
+        this.goalSelector.addGoal(2, new SeekShelterFromRainGoal(this, 1.2));
         this.goalSelector.addGoal(3, new HarvestAndReplantGoal(this, 1.0));
+    }
+
+    /** Melts in rain (rainDecayPerSecond) and twice as fast in water, checked once per second. */
+    @Override
+    protected void environmentTick() {
+        if (++environmentTicks < 20) return;
+        environmentTicks = 0;
+        int rate = GolemConfig.dirtRainDecayPerSecond();
+        if (this.isInWater())
+            consumeIntegrity(2 * rate);
+        else if (this.level().isRainingAt(this.blockPosition().above()))
+            consumeIntegrity(rate);
     }
 
     /** Never turns farmland back into dirt, whether walking or falling on it. */
