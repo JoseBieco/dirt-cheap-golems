@@ -4,8 +4,10 @@ import com.josebieco.dirtcheapgolems.DirtCheapGolems;
 import com.josebieco.dirtcheapgolems.entity.AbstractCheapGolem;
 import com.josebieco.dirtcheapgolems.entity.DirtGolem;
 import com.josebieco.dirtcheapgolems.entity.EndStoneGolem;
+import com.josebieco.dirtcheapgolems.entity.GravelGolem;
 import com.josebieco.dirtcheapgolems.entity.NetherrackGolem;
 import com.josebieco.dirtcheapgolems.entity.SandGolem;
+import com.josebieco.dirtcheapgolems.entity.projectile.FlintShard;
 import com.josebieco.dirtcheapgolems.entity.projectile.SandBlast;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -30,6 +32,19 @@ public final class ModEntities {
             .build(ENTITIES.key("netherrack_golem")));
 
     public static final RegistryObject<EntityType<EndStoneGolem>> END_STONE_GOLEM = golem("end_stone_golem", EndStoneGolem::new);
+
+    public static final RegistryObject<EntityType<GravelGolem>> GRAVEL_GOLEM = ENTITIES.register("gravel_golem",
+        () -> EntityType.Builder.of(GravelGolem::new, MobCategory.MISC)
+            .sized(0.7F, 0.9F)
+            .clientTrackingRange(8)
+            .build(ENTITIES.key("gravel_golem")));
+
+    public static final RegistryObject<EntityType<FlintShard>> FLINT_SHARD = ENTITIES.register("flint_shard",
+        () -> EntityType.Builder.<FlintShard>of(FlintShard::new, MobCategory.MISC)
+            .sized(0.25F, 0.25F)
+            .clientTrackingRange(4)
+            .updateInterval(10)
+            .build(ENTITIES.key("flint_shard")));
 
     public static final RegistryObject<EntityType<SandBlast>> SAND_BLAST = ENTITIES.register("sand_blast",
         () -> EntityType.Builder.<SandBlast>of(SandBlast::new, MobCategory.MISC)
@@ -57,5 +72,6 @@ public final class ModEntities {
         event.put(SAND_GOLEM.get(), SandGolem.createAttributes().build());
         event.put(NETHERRACK_GOLEM.get(), NetherrackGolem.createAttributes().build());
         event.put(END_STONE_GOLEM.get(), EndStoneGolem.createAttributes().build());
+        event.put(GRAVEL_GOLEM.get(), GravelGolem.createAttributes().build());
     }
 }

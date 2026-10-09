@@ -46,6 +46,9 @@ public final class ModLanguageProvider extends LanguageProvider {
         add("message.dirtcheapgolems.core.linked", t("Linked to %s", "Vinculado a %s"));
         add("message.dirtcheapgolems.core.unlinked", t("Link cleared", "V\u00ednculo removido"));
         add("tooltip.dirtcheapgolems.core.linked", t("Linked to: %s, %s, %s (%s)", "Vinculado a: %s, %s, %s (%s)"));
+        addEntityType(ModEntities.GRAVEL_GOLEM, t("Gravel Golem", "Golem de Cascalho"));
+        addItem(ModItems.GRAVEL_GOLEM_SPAWN_EGG, t("Gravel Golem Spawn Egg", "Ovo Gerador de Golem de Cascalho"));
+        addEntityType(ModEntities.FLINT_SHARD, t("Flint Shard", "Estilha\u00e7o de S\u00edlex"));
         addEntityType(ModEntities.SAND_BLAST, t("Sand Blast", "Rajada de Areia"));
         addEffect(ModEffects.SAND_IN_EYES, t("Sand in Eyes", "Areia nos Olhos"));
     }
