@@ -108,6 +108,10 @@ public final class DirtGolemTests {
     public static void doesNotTrampleFarmland(GameTestHelper helper) {
         Arena.floor(helper);
         var farmland = new BlockPos(4, 1, 4);
+        // Dry farmland reverts to dirt on a random tick (flaky!), so give it water: a stone-lined pool two blocks away.
+        for (var dir : net.minecraft.core.Direction.Plane.HORIZONTAL)
+            helper.setBlock(new BlockPos(2, 1, 4).relative(dir), Blocks.STONE);
+        helper.setBlock(new BlockPos(2, 1, 4), Blocks.WATER);
         helper.setBlock(farmland, Blocks.FARMLAND);
         var golem = helper.spawn(ModEntities.DIRT_GOLEM.get(), new BlockPos(4, 4, 4));
         helper.runAfterDelay(40, () -> {
@@ -176,9 +180,11 @@ public final class DirtGolemTests {
     public static void doesNotHarvestInRain(GameTestHelper helper) {
         Arena.floor(helper);
         Arena.rainyBiome(helper);
+        // Roof over the whole arena except the crop's column: the golem may wander (random stroll) anywhere
+        // without ever being rained on, yet the crop stays exposed and in reach.
         for (int x = 0; x < 9; x++)
-            for (int z = 0; z < 4; z++)
-                helper.setBlock(new BlockPos(x, 3, z), Blocks.STONE);   // roof over the z < 4 half
+            for (int z = 0; z < 9; z++)
+                if (x != 4 || z != 6) helper.setBlock(new BlockPos(x, 3, z), Blocks.STONE);
         var golem = golemAt(helper, 4, 1);
         NetherrackGolemTests.whenFirst(helper, () -> helper.getLevel().isRaining(), () -> {
             var crop = plant(helper, 4, 6, Blocks.WHEAT, 7);
