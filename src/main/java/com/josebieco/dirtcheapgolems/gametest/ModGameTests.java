@@ -22,7 +22,8 @@ public final class ModGameTests {
     /** Every class holding {@code @GameTest} methods. Add new test classes here. */
     public static final List<Class<?>> TEST_CLASSES = List.of(
         SmokeTests.class,
-        CoreGolemTests.class
+        CoreGolemTests.class,
+        ActivationTests.class
     );
 
     private static final DeferredRegister<Consumer<GameTestHelper>> FUNCTIONS =
