@@ -15,6 +15,19 @@ public final class Arena {
         helper.makeFloor(Blocks.STONE, 0);
     }
 
+    /** A real survival player standing in the level at the given relative position. Remove with {@link #removePlayer}. */
+    public static net.minecraft.server.level.ServerPlayer survivalPlayer(GameTestHelper helper, net.minecraft.world.phys.Vec3 relative) {
+        var player = helper.makeMockServerPlayerFull(net.minecraft.world.level.GameType.SURVIVAL);
+        var pos = helper.absoluteVec(relative);
+        player.setPos(pos.x, pos.y, pos.z);
+        helper.getLevel().addNewPlayer(player);
+        return player;
+    }
+
+    public static void removePlayer(GameTestHelper helper, net.minecraft.server.level.ServerPlayer player) {
+        helper.getLevel().removePlayerImmediately(player, net.minecraft.world.entity.Entity.RemovalReason.DISCARDED);
+    }
+
     /** Test arenas land in arbitrary biomes (deserts never rain): force plains over the arena. */
     public static void rainyBiome(GameTestHelper helper) {
         var min = helper.absolutePos(BlockPos.ZERO);

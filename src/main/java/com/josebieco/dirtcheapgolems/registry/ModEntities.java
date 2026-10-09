@@ -52,6 +52,6 @@ public final class ModEntities {
     private static void createAttributes(EntityAttributeCreationEvent event) {
         event.put(DIRT_GOLEM.get(), AbstractCheapGolem.createBaseAttributes().build());
         event.put(SAND_GOLEM.get(), SandGolem.createAttributes().build());
-        event.put(NETHERRACK_GOLEM.get(), AbstractCheapGolem.createBaseAttributes().build());
+        event.put(NETHERRACK_GOLEM.get(), NetherrackGolem.createAttributes().build());
     }
 }

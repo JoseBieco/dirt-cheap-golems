@@ -1,6 +1,15 @@
 package com.josebieco.dirtcheapgolems.entity;
 
 import com.josebieco.dirtcheapgolems.config.GolemConfig;
+import com.josebieco.dirtcheapgolems.entity.ai.KamikazeChargeGoal;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -18,6 +27,9 @@ import org.jspecify.annotations.Nullable;
 
 /** "Kamikaze Térmico" (spec §6.3): a walking light that blows itself up against hostiles. */
 public class NetherrackGolem extends AbstractCheapGolem {
+    private static final EntityDataAccessor<Integer> DATA_FUSE =
+        SynchedEntityData.defineId(NetherrackGolem.class, EntityDataSerializers.INT);
+
     private final WalkingLight walkingLight = new WalkingLight();
     /** Light saved in NBT by a previous life of this golem; removed before any new light is placed. */
     private @Nullable BlockPos staleLight;
@@ -26,9 +38,55 @@ public class NetherrackGolem extends AbstractCheapGolem {
         super(type, level);
     }
 
+    public static AttributeSupplier.Builder createAttributes() {
+        // Follow range is the upper bound for targeting; the configured kamikaze range is enforced by the target selector.
+        return createBaseAttributes().add(Attributes.FOLLOW_RANGE, 64.0);
+    }
+
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(1, new KamikazeChargeGoal(this));
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Mob.class, 10, true, false,
+            (target, level) -> target instanceof Enemy && this.distanceTo(target) <= GolemConfig.netherrackKamikazeRange()));
+    }
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder entityData) {
+        super.defineSynchedData(entityData);
+        entityData.define(DATA_FUSE, 0);
+    }
+
+    // ---- fuse (synced so clients can show sparks) ----
+
+    public int getFuseTicks() {
+        return this.entityData.get(DATA_FUSE);
+    }
+
+    public void startFuse() {
+        if (getFuseTicks() > 0) return;
+        this.entityData.set(DATA_FUSE, 1);
+        this.playSound(SoundEvents.CREEPER_PRIMED, 1.0F, 0.6F);
+    }
+
+    public void advanceFuse() {
+        if (getFuseTicks() > 0) this.entityData.set(DATA_FUSE, getFuseTicks() + 1);
+    }
+
+    public void cancelFuse() {
+        this.entityData.set(DATA_FUSE, 0);
+    }
+
     @Override
     public void tick() {
         super.tick();
+        if (this.level().isClientSide()) {
+            if (getFuseTicks() > 0) {
+                this.level().addParticle(ParticleTypes.FLAME, this.getRandomX(0.5), this.getY(0.8), this.getRandomZ(0.5), 0.0, 0.03, 0.0);
+                this.level().addParticle(ParticleTypes.SMOKE, this.getRandomX(0.5), this.getY(1.0), this.getRandomZ(0.5), 0.0, 0.05, 0.0);
+            }
+            return;
+        }
         if (!(this.level() instanceof ServerLevel level) || this.isRemoved()) return;
         if (staleLight != null) {
             WalkingLight.removeLightAt(level, staleLight);

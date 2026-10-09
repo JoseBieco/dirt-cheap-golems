@@ -78,15 +78,12 @@ public final class SandGolemTests {
     }
 
     @GameTest(structure = Arena.STRUCTURE, maxTicks = 120)
-    @SuppressWarnings("removal")
     public static void ignoresPlayers(GameTestHelper helper) {
         Arena.floor(helper);
         sandGolem(helper, new BlockPos(0, 1, 4));
-        var player = helper.makeMockServerPlayerInLevel();
-        var pos = helper.absoluteVec(new Vec3(6.5, 1, 4.5));
-        player.setPos(pos.x, pos.y, pos.z);
+        var player = Arena.survivalPlayer(helper, new Vec3(6.5, 1, 4.5));
         helper.runAfterDelay(100, () -> {
-            helper.getLevel().getServer().getPlayerList().remove(player);
+            Arena.removePlayer(helper, player);
             helper.assertEntityNotPresent(ModEntities.SAND_BLAST.get());
             helper.succeed();
         });
