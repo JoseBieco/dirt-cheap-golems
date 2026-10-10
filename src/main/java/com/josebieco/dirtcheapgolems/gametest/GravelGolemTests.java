@@ -92,6 +92,7 @@ public final class GravelGolemTests {
         // The golem's own flint shards knock the (AI-less, frictionless) husk around, so bury-check where it stood
         // when the golem collapsed rather than at its spawn point.
         BlockPos[] buriedAt = {null};
+        boolean[] wasInWall = {false};
         helper.succeedWhen(() -> {
             helper.assertTrue(golem.isRemoved(), "golem should have collapsed");
             if (buriedAt[0] == null) buriedAt[0] = husk.blockPosition();
@@ -101,6 +102,10 @@ public final class GravelGolemTests {
                 gravel |= helper.getLevel().getBlockState(buriedAt[0].offset(dx, y, dz)).is(Blocks.GRAVEL);
             }
             helper.assertTrue(gravel, "target buried in gravel");
+            // Impact and shards already hurt it: require that the gravel really entombs it (eye block filled).
+            wasInWall[0] |= husk.isInWall();
+            helper.assertTrue(wasInWall[0], "target should end up inside the gravel (suffocation), eye block "
+                + helper.getLevel().getBlockState(BlockPos.containing(husk.getEyePosition())));
         });
     }
 

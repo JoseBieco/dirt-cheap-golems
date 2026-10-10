@@ -207,6 +207,41 @@ public final class BasaltGolemTests {
         });
     }
 
+    /** An arrow already stuck in a block is inert: the magnet must not charge integrity for it. */
+    @GameTest(structure = Arena.STRUCTURE)
+    public static void ignoresArrowStuckInGround(GameTestHelper helper) throws Exception {
+        Arena.floor(helper);
+        var golem = helper.spawnWithNoFreeWill(ModEntities.BASALT_GOLEM.get(), CENTER);
+        var skeleton = helper.spawnWithNoFreeWill(net.minecraft.world.entity.EntityTypes.SKELETON, new BlockPos(7, 1, 7));
+        skeleton.setNoAi(true);
+        helper.setBlock(new BlockPos(6, 2, 4), Blocks.STONE);   // keeps the arrow stuck (it falls off if nothing is there)
+        var arrow = arrowFrom(helper, skeleton, new Vec3(6.0, 2.0, 4.5));
+        var setInGround = net.minecraft.world.entity.projectile.arrow.AbstractArrow.class
+            .getDeclaredMethod("setInGround", boolean.class);
+        setInGround.setAccessible(true);
+        setInGround.invoke(arrow, true);
+        helper.runAfterDelay(5, () -> {
+            helper.assertTrue(!arrow.isRemoved(), "stuck arrow untouched");
+            helper.assertTrue(golem.getIntegrity() == 100, "no integrity lost, got " + golem.getIntegrity());
+            helper.succeed();
+        });
+    }
+
+    /** Two hits in the same tick: the second falls inside invulnerability frames and must not charge. */
+    @GameTest(structure = Arena.STRUCTURE)
+    public static void meleeHitCostsOnlyWhenItLands(GameTestHelper helper) {
+        Arena.floor(helper);
+        var golem = helper.spawnWithNoFreeWill(ModEntities.BASALT_GOLEM.get(), CENTER);
+        var zombie = helper.spawnWithNoFreeWill(net.minecraft.world.entity.EntityTypes.HUSK, new BlockPos(7, 1, 7));
+        zombie.setNoAi(true);
+        var source = helper.getLevel().damageSources().mobAttack(zombie);
+        golem.hurtServer(helper.getLevel(), source, 3.0F);
+        golem.hurtServer(helper.getLevel(), source, 3.0F);
+        helper.assertTrue(golem.getIntegrity() >= 97 && golem.getIntegrity() <= 98,
+            "one landed hit costs 2, got " + golem.getIntegrity());
+        helper.succeed();
+    }
+
     /** V2-T14 */
     @GameTest(structure = Arena.STRUCTURE)
     public static void ignoresPlayerArrow(GameTestHelper helper) {

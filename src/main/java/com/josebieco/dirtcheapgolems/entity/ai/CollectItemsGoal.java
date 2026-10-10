@@ -45,6 +45,7 @@ public class CollectItemsGoal extends Goal {
         scanCooldown = SCAN_INTERVAL;
         var link = golem.getLinkedContainer();
         if (link == null || !(golem.level() instanceof ServerLevel level)) return false;
+        if (!link.dimension().equals(level.dimension())) return false;   // linked in another dimension: idle, keep the link
         if (!level.isLoaded(link.pos())) return false;
         var handler = handlerAt(level, link.pos());
         if (handler == null) {
@@ -59,7 +60,8 @@ public class CollectItemsGoal extends Goal {
     @Override
     public boolean canContinueToUse() {
         return target != null && target.isAlive() && !target.hasPickUpDelay() && ticksRunning < GIVE_UP_TICKS
-            && golem.getLinkedContainer() != null;
+            && golem.getLinkedContainer() != null
+            && golem.getLinkedContainer().dimension().equals(golem.level().dimension());
     }
 
     @Override
@@ -110,7 +112,7 @@ public class CollectItemsGoal extends Goal {
 
     private void teleport(ServerLevel level, ItemEntity item) {
         var link = golem.getLinkedContainer();
-        if (link == null) return;
+        if (link == null || !link.dimension().equals(level.dimension())) return;
         var handler = handlerAt(level, link.pos());
         if (handler == null) return;
         ItemStack stack = item.getItem();

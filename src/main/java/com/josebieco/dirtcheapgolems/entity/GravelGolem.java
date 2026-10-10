@@ -70,12 +70,15 @@ public class GravelGolem extends AbstractCheapGolem {
         target.hurtServer(level, level.damageSources().mobAttack(this), (float) GolemConfig.gravelLeapImpactDamage());
         int blocks = GolemConfig.gravelLeapBlocks();
         if (GolemConfig.gravelLeapPlacesBlocks() && ForgeEventFactory.getMobGriefingEvent(level, this)) {
+            // Falling blocks do not collide with mobs: gravel dropped from above the head settles in the feet
+            // block and the one stacked on top of it in the eye block, which is what actually suffocates.
             BlockPos head = headPos(target);
             List<BlockPos> sides = new ArrayList<>();
             for (Direction d : Direction.Plane.HORIZONTAL) sides.add(head.relative(d));
             Collections.shuffle(sides, new java.util.Random(this.getRandom().nextLong()));
             List<BlockPos> positions = new ArrayList<>();
             positions.add(head);
+            positions.add(head.above());
             positions.addAll(sides);
             for (BlockPos pos : positions.subList(0, Math.min(blocks, positions.size()))) {
                 if (level.getBlockState(pos).isAir()) {

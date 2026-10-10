@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:function",
+  "dimension": "minecraft:overworld",
+  "environment": "dirtcheapgolems:rain",
+  "function": "dirtcheapgolems:dirt/stays_sheltered_in_rain",
+  "manual_only": false,
+  "max_attempts": 1,
+  "max_ticks": 500,
+  "padding": 0,
+  "required": true,
+  "required_successes": 1,
+  "rotation": "none",
+  "setup_ticks": 0,
+  "sky_access": true,
+  "structure": "forge:empty9x5x9"
+}

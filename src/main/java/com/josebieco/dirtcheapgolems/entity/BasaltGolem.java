@@ -246,6 +246,8 @@ public class BasaltGolem extends AbstractCheapGolem {
         var area = this.getBoundingBox().inflate(radius);
         for (Projectile projectile : level.getEntitiesOfClass(Projectile.class, area)) {
             if (projectile.isRemoved()) continue;
+            // Arrows/tridents stuck in a block are inert (isPushedByFluid is !isInGround for them).
+            if (projectile instanceof AbstractArrow arrow && !arrow.isPushedByFluid()) continue;
             if (!(projectile.getOwner() instanceof Mob owner) || !(owner instanceof Enemy)) continue;
             if (projectile.position().distanceToSqr(center) > radius * radius) continue;
             var pos = projectile.position();
@@ -260,9 +262,10 @@ public class BasaltGolem extends AbstractCheapGolem {
 
     @Override
     public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
-        if (source.getEntity() instanceof LivingEntity && !source.is(DamageTypeTags.IS_PROJECTILE))
+        boolean hurt = super.hurtServer(level, source, damage);
+        if (hurt && source.getEntity() instanceof LivingEntity && !source.is(DamageTypeTags.IS_PROJECTILE))
             consumeIntegrity(GolemConfig.basaltMeleeHitCost());
-        return super.hurtServer(level, source, damage);
+        return hurt;
     }
 
     // ---- crumbling (particles come from the base through getMaterialState) ----

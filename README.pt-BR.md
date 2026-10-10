@@ -8,7 +8,7 @@
 
 **Minecraft 26.3 · Forge 66.0.9 · v2.0.0**
 
-Todo mundo de sobrevivência acaba com baús cheios de terra, areia e netherrack. O Dirt Cheap Golems dá um emprego a esses blocos: dois blocos e um núcleo barato viram um pequeno golem que cuida da plantação, defende ou ilumina a sua base. O porém: **os golems são descartáveis**. Eles se desgastam ao trabalhar, com o passar do tempo e quando o clima não ajuda, e por isso você sempre volta a precisar de mais blocos.
+Todo mundo de sobrevivência acaba com baús cheios de terra, areia, netherrack, cascalho, basalto e pedra do End. O Dirt Cheap Golems dá um emprego a esses blocos: dois blocos e um núcleo barato viram um pequeno golem que cuida da plantação, defende ou ilumina a sua base. O porém: **os golems são descartáveis**. Eles se desgastam ao trabalhar, com o passar do tempo e quando o clima não ajuda, e por isso você sempre volta a precisar de mais blocos.
 
 ---
 

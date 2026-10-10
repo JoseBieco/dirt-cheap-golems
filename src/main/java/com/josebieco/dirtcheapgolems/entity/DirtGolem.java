@@ -6,6 +6,7 @@ import com.josebieco.dirtcheapgolems.entity.ai.SeekShelterFromRainGoal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -25,6 +26,14 @@ public class DirtGolem extends AbstractCheapGolem {
         super.registerGoals();
         this.goalSelector.addGoal(2, new SeekShelterFromRainGoal(this, 1.2));
         this.goalSelector.addGoal(3, new HarvestAndReplantGoal(this, 1.0));
+        // Shelter beats strolling (spec 6.1): never wander off while it rains, or it walks out of cover.
+        this.goalSelector.removeAllGoals(goal -> goal instanceof WaterAvoidingRandomStrollGoal);
+        this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.8) {
+            @Override
+            public boolean canUse() {
+                return !DirtGolem.this.level().isRaining() && super.canUse();
+            }
+        });
     }
 
     /** Melts in rain (rainDecayPerSecond) and twice as fast in water, checked once per second. */

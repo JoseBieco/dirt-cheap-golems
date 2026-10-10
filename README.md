@@ -8,7 +8,7 @@
 
 **Minecraft 26.3 · Forge 66.0.9 · v2.0.0**
 
-Every survival world ends up with chests full of dirt, sand and netherrack. Dirt Cheap Golems gives those blocks a job: two blocks and a cheap core become a small golem that farms, defends or lights up your base. The catch: **golems are disposable**. They wear out as they work, as time passes and when the weather turns against them, so you keep coming back for more blocks.
+Every survival world ends up with chests full of dirt, sand, netherrack, gravel, basalt and end stone. Dirt Cheap Golems gives those blocks a job: two blocks and a cheap core become a small golem that farms, defends or lights up your base. The catch: **golems are disposable**. They wear out as they work, as time passes and when the weather turns against them, so you keep coming back for more blocks.
 
 ---
 

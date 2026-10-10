@@ -208,4 +208,26 @@ public final class DirtGolemTests {
         helper.succeedWhen(() -> helper.assertFalse(helper.getLevel().canSeeSky(golem.blockPosition().above()),
             "golem should be under the roof"));
     }
+
+    /** Spec §6.1 regression: the random stroll must not walk a sheltered golem out into the rain. */
+    @GameTest(structure = Arena.STRUCTURE, environment = "rain", skyAccess = true, maxTicks = 500)
+    public static void staysShelteredInRain(GameTestHelper helper) {
+        Arena.floor(helper);
+        Arena.rainyBiome(helper);
+        for (int x = 0; x < 9; x++)
+            for (int z = 0; z < 5; z++)
+                helper.setBlock(new BlockPos(x, 3, z), Blocks.STONE);   // roof over the z < 5 half
+        var golem = golemAt(helper, 4, 2);
+        int[] rainyTicks = {0};
+        helper.onEachTick(() -> {
+            if (!helper.getLevel().isRaining()) return;
+            rainyTicks[0]++;
+            helper.assertFalse(helper.getLevel().isRainingAt(golem.blockPosition().above()),
+                "golem strolled out into the rain at " + golem.blockPosition());
+        });
+        helper.succeedWhen(() -> {
+            helper.assertTrue(rainyTicks[0] >= 150, "waiting for 150 ticks of rain");
+            helper.assertValueEqual(100, golem.getIntegrity(), "integrity", "golem stayed sheltered");
+        });
+    }
 }
