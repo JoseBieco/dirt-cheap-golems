@@ -103,6 +103,8 @@ Uma **luz ambulante** (nível de luz 12) que patrulha a sua base. Quando um mob 
 
 ### Golem de End Stone: o Coletor
 
+![Golem de End Stone](docs/assets/end_stone_golem.jpg)
+
 Um golem **voador** que paira de 0,5 a 1,5 bloco acima do chão quando está parado. Vincule um contêiner a um núcleo (agachado + clicar num baú) e crie o golem com um núcleo da mesma pilha: ele **coleta itens caídos dentro do raio da casa e os teleporta para o contêiner vinculado**.
 
 - O contêiner precisa estar a até **32 blocos da casa do golem**, na mesma dimensão.
@@ -113,6 +115,8 @@ Um golem **voador** que paira de 0,5 a 1,5 bloco acima do chão quando está par
 
 ### Golem de Cascalho: a Artilharia
 
+![Golem de Cascalho](docs/assets/gravel_golem.jpg)
+
 Uma peça de artilharia móvel. Arremessa **estilhaços de sílex** em **mobs hostis** a até **16 blocos**, preferindo alvos **mais baixos** que ele (muralhas e torres são o território dele). Os estilhaços atravessam jogadores, aldeões e outros mobs não hostis.
 
 Cada acerto causa 3 de dano e aplica **Lentidão I** por 3 s.
@@ -122,6 +126,8 @@ Cada acerto causa 3 de dano e aplica **Lentidão I** por 3 s.
 - **Ao desmoronar:** 50% de chance de dropar 1 Cascalho.
 
 ### Golem de Basalto / Deepslate: o Escudo
+
+![Golem de Basalto](docs/assets/basalt_golem.jpg)
 
 Um escudo vivo para o **dono**, o jogador que o criou. Monte um pilar com qualquer mistura de basalto, basalto polido, basalto liso, deepslate ou deepslate lapidado. Golems de ovo de spawn não têm dono e ficam em GUARD.
 

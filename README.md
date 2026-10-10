@@ -103,6 +103,8 @@ A **walking light** (light level 12) that patrols your base. When a hostile mob 
 
 ### End Stone Golem: the Collector
 
+![End Stone Golem](docs/assets/end_stone_golem.jpg)
+
 A **flying** golem that hovers 0.5 to 1.5 blocks above the ground when idle. Link a container to a core (sneak + click a chest), then create the golem with a core from that same stack: it **collects dropped items within its home radius and teleports them into the linked container**.
 
 - The container must be within **32 blocks of the golem's home**, in the same dimension.
@@ -113,6 +115,8 @@ A **flying** golem that hovers 0.5 to 1.5 blocks above the ground when idle. Lin
 
 ### Gravel Golem: the Artillery
 
+![Gravel Golem](docs/assets/gravel_golem.jpg)
+
 A mobile artillery piece. It throws **flint shards** at **hostile mobs** up to **16 blocks** away, preferring targets **lower** than itself (walls and towers are its home turf). Shards fly through players, villagers and other non-hostiles.
 
 Each hit deals 3 damage and applies **Slowness I** for 3 s.
@@ -122,6 +126,8 @@ Each hit deals 3 damage and applies **Slowness I** for 3 s.
 - **Crumbles into:** 50% chance of 1 Gravel.
 
 ### Basalt / Deepslate Golem: the Shield
+
+![Basalt Golem](docs/assets/basalt_golem.jpg)
 
 A living shield for **its owner**, the player who created it. Build a pillar from any mix of basalt, polished basalt, smooth basalt, deepslate or cobbled deepslate. Golems from spawn eggs have no owner and stay in GUARD.
 
