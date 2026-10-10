@@ -278,4 +278,74 @@ public final class BasaltGolemTests {
             "melee hit costs 2, got " + golem.getIntegrity());
         helper.succeed();
     }
+
+    // ---- follow and intercept (spec v2 6.3) ----
+
+    /** Owned FOLLOW golem with its goals active (helper.spawn, not spawnWithNoFreeWill). */
+    private static BasaltGolem followingGolem(GameTestHelper helper, ServerPlayer owner, BlockPos at) {
+        Arena.floor(helper);
+        var golem = helper.spawn(ModEntities.BASALT_GOLEM.get(), at);
+        golem.notifyCreated(Blocks.BASALT.defaultBlockState(), owner);
+        return golem;
+    }
+
+    @GameTest(structure = Arena.STRUCTURE, maxTicks = 200)
+    public static void followsOwner(GameTestHelper helper) {
+        var owner = Arena.survivalPlayer(helper, new Vec3(1.5, 1, 4.5));
+        var golem = followingGolem(helper, owner, new BlockPos(7, 1, 4));
+        helper.assertTrue(golem.distanceTo(owner) > 5.0, "starts about 6 blocks away");
+        helper.runAfterDelay(100, () -> {
+            helper.assertTrue(golem.distanceTo(owner) <= 3.5, "golem reached its owner, distance " + golem.distanceTo(owner));
+            Arena.removePlayer(helper, owner);
+            helper.succeed();
+        });
+    }
+
+    @GameTest(structure = Arena.STRUCTURE, maxTicks = 200)
+    public static void stopsWhenOwnerTooFar(GameTestHelper helper) {
+        var owner = Arena.survivalPlayer(helper, new Vec3(34.5, 1, 4.5));
+        var golem = followingGolem(helper, owner, CENTER);
+        var start = golem.position();
+        helper.runAfterDelay(60, () -> {
+            helper.assertTrue(golem.position().distanceTo(start) < 1.0,
+                "golem must wait, moved " + golem.position().distanceTo(start));
+            helper.assertValueEqual(ShieldMode.FOLLOW, golem.getMode(), "mode", "still following");
+            Arena.removePlayer(helper, owner);
+            helper.succeed();
+        });
+    }
+
+    /** Review Focus 4 */
+    @GameTest(structure = Arena.STRUCTURE, maxTicks = 200)
+    public static void ownerLeavesWhileFollowing(GameTestHelper helper) {
+        var owner = Arena.survivalPlayer(helper, new Vec3(1.5, 1, 4.5));
+        var golem = followingGolem(helper, owner, new BlockPos(7, 1, 4));
+        helper.runAfterDelay(10, () -> {
+            Arena.removePlayer(helper, owner);
+            helper.runAfterDelay(40, () -> {
+                helper.assertTrue(!golem.isRemoved() && golem.isAlive(), "golem survives the owner leaving");
+                helper.assertValueEqual(ShieldMode.FOLLOW, golem.getMode(), "mode", "still following");
+                helper.assertTrue(golem.getOwner() == null, "owner offline");
+                helper.succeed();
+            });
+        });
+    }
+
+    /** The skeleton wears a helmet so it does not burn in the sunlit arena. */
+    @GameTest(structure = Arena.STRUCTURE, maxTicks = 300)
+    public static void positionsBetweenOwnerAndSkeleton(GameTestHelper helper) {
+        var owner = Arena.survivalPlayer(helper, new Vec3(1.5, 1, 4.5));
+        var golem = followingGolem(helper, owner, new BlockPos(5, 1, 7));
+        var skeleton = helper.spawnWithNoFreeWill(net.minecraft.world.entity.EntityTypes.SKELETON, new BlockPos(7, 1, 4));
+        skeleton.setNoAi(true);
+        skeleton.setItemSlot(net.minecraft.world.entity.EquipmentSlot.HEAD, new ItemStack(Items.IRON_HELMET));
+        skeleton.setTarget(owner);
+        helper.runAfterDelay(120, () -> {
+            var rel = helper.relativeVec(golem.position());
+            helper.assertTrue(rel.x >= 2.0 && rel.x <= 4.0 && rel.z >= 3.3 && rel.z <= 4.7,
+                "golem between owner and skeleton, at " + rel);
+            Arena.removePlayer(helper, owner);
+            helper.succeed();
+        });
+    }
 }
