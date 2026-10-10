@@ -35,7 +35,9 @@ PALETTES = {
 END_STONE_PALETTE = [(219, 222, 158), (207, 210, 144), (228, 231, 172), (196, 199, 131), (233, 235, 187)]
 # gravel, like end_stone, uses its own RNG so the existing textures stay byte-identical.
 GRAVEL_PALETTE = [(131, 127, 126), (118, 114, 114), (145, 141, 140), (100, 96, 96), (156, 152, 150)]
-EYES = {"gravel": (61, 58, 58), "dirt": (34, 22, 14), "sand": (92, 74, 40), "netherrack": (255, 170, 40), "end_stone": (155, 95, 192)}
+# basalt/deepslate: one dark grey-blue palette for both source blocks, own RNG as well.
+BASALT_PALETTE = [(78, 77, 82), (68, 67, 72), (90, 89, 95), (58, 57, 62), (99, 98, 105)]
+EYES = {"basalt": (154, 160, 168), "gravel": (61, 58, 58), "dirt": (34, 22, 14), "sand": (92, 74, 40), "netherrack": (255, 170, 40), "end_stone": (155, 95, 192)}
 
 
 def write_png(path, width, height, pixels):
@@ -74,7 +76,7 @@ def used_pixels():
 
 def golem_skin(material, rng):
     img = blank(64, 64)
-    palette = PALETTES.get(material) or {"gravel": GRAVEL_PALETTE}.get(material, END_STONE_PALETTE)
+    palette = PALETTES.get(material) or {"gravel": GRAVEL_PALETTE, "basalt": BASALT_PALETTE}.get(material, END_STONE_PALETTE)
     for x, y in used_pixels():
         img[y][x] = (*rng.choice(palette), 255)
     ex, ey = HEAD_FRONT
@@ -154,4 +156,5 @@ if __name__ == "__main__":
     write_png(os.path.join(ROOT, "mob_effect", "sand_in_eyes.png"), 18, 18, sand_in_eyes_icon(rng))
     write_png(os.path.join(ROOT, "entity", "end_stone_golem.png"), 64, 64, golem_skin("end_stone", random.Random(5678)))
     write_png(os.path.join(ROOT, "entity", "gravel_golem.png"), 64, 64, golem_skin("gravel", random.Random(9012)))
+    write_png(os.path.join(ROOT, "entity", "basalt_golem.png"), 64, 64, golem_skin("basalt", random.Random(3456)))
     print("textures written to", ROOT)

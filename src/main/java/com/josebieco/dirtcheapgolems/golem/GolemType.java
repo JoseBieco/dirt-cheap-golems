@@ -18,7 +18,8 @@ public enum GolemType {
     SAND(ModTags.Blocks.MATERIAL_SAND, () -> ModEntities.SAND_GOLEM.get()),
     NETHERRACK(ModTags.Blocks.MATERIAL_NETHERRACK, () -> ModEntities.NETHERRACK_GOLEM.get()),
     END_STONE(ModTags.Blocks.MATERIAL_END_STONE, () -> ModEntities.END_STONE_GOLEM.get()),
-    GRAVEL(ModTags.Blocks.MATERIAL_GRAVEL, () -> ModEntities.GRAVEL_GOLEM.get());
+    GRAVEL(ModTags.Blocks.MATERIAL_GRAVEL, () -> ModEntities.GRAVEL_GOLEM.get()),
+    BASALT(ModTags.Blocks.MATERIAL_BASALT, () -> ModEntities.BASALT_GOLEM.get());
 
     private final TagKey<Block> material;
     private final Supplier<? extends @Nullable EntityType<? extends AbstractCheapGolem>> entityType;

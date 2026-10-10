@@ -16,6 +16,7 @@ public final class ModTags {
         public static final TagKey<Block> MATERIAL_NETHERRACK = material("netherrack");
         public static final TagKey<Block> MATERIAL_END_STONE = material("end_stone");
         public static final TagKey<Block> MATERIAL_GRAVEL = material("gravel");
+        public static final TagKey<Block> MATERIAL_BASALT = material("basalt");
 
         private Blocks() {}
 

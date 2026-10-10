@@ -18,6 +18,7 @@ import net.minecraft.resources.Identifier;
 public class CheapGolemRenderer<T extends AbstractCheapGolem> extends MobRenderer<T, CheapGolemRenderState, CheapGolemModel> {
     private final Identifier texture;
     private boolean bobbing;
+    private float scale = 1.0F;
 
     public CheapGolemRenderer(EntityRendererProvider.Context context, Identifier texture) {
         super(context, new CheapGolemModel(context.bakeLayer(CheapGolemModel.LAYER)), 0.4F);
@@ -39,6 +40,17 @@ public class CheapGolemRenderer<T extends AbstractCheapGolem> extends MobRendere
     /** Makes the golem float up and down (client only), used by the End Stone Golem. */
     public void enableBobbing() {
         this.bobbing = true;
+    }
+
+    /** Scales the model uniformly (client only), used by the Basalt Golem. */
+    public void setScale(float scale) {
+        this.scale = scale;
+    }
+
+    @Override
+    protected void scale(CheapGolemRenderState state, PoseStack poseStack) {
+        super.scale(state, poseStack);
+        poseStack.scale(scale, scale, scale);
     }
 
     @Override
