@@ -8,7 +8,21 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
+import net.minecraft.world.entity.projectile.hurtingprojectile.LargeFireball;
+import net.minecraft.world.entity.projectile.hurtingprojectile.SmallFireball;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -122,6 +136,44 @@ public class BasaltGolem extends AbstractCheapGolem {
         player.sendOverlayMessage(Component.translatable(
             "message.dirtcheapgolems.basalt.mode." + next.name().toLowerCase(Locale.ROOT)));
         return InteractionResult.SUCCESS;
+    }
+
+    // ---- projectile magnet and melee hits ----
+
+    /** Integrity cost of absorbing the projectile (arrows include tridents). */
+    public int absorbCost(Projectile projectile) {
+        if (projectile instanceof AbstractArrow) return GolemConfig.basaltArrowCost();
+        if (projectile instanceof SmallFireball) return GolemConfig.basaltSmallFireballCost();
+        if (projectile instanceof LargeFireball) return GolemConfig.basaltLargeFireballCost();
+        return GolemConfig.basaltOtherProjectileCost();
+    }
+
+    /** Absorbs hostile projectiles in range: discarded without onHit, so fireballs never explode. */
+    @Override
+    protected void environmentTick() {
+        if (!(this.level() instanceof ServerLevel level)) return;
+        double radius = GolemConfig.basaltMagnetRadius();
+        var center = this.position().add(0.0, this.getBbHeight() / 2.0, 0.0);
+        var area = this.getBoundingBox().inflate(radius);
+        for (Projectile projectile : level.getEntitiesOfClass(Projectile.class, area)) {
+            if (projectile.isRemoved()) continue;
+            if (!(projectile.getOwner() instanceof Mob owner) || !(owner instanceof Enemy)) continue;
+            if (projectile.position().distanceToSqr(center) > radius * radius) continue;
+            var pos = projectile.position();
+            projectile.discard();
+            level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, getSourceBlock()),
+                pos.x, pos.y, pos.z, 8, 0.15, 0.15, 0.15, 0.05);
+            level.playSound(null, pos.x, pos.y, pos.z, SoundEvents.STONE_BREAK, SoundSource.NEUTRAL, 0.8F, 1.0F);
+            consumeIntegrity(absorbCost(projectile));
+            if (this.isRemoved()) return;
+        }
+    }
+
+    @Override
+    public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
+        if (source.getEntity() instanceof LivingEntity && !source.is(DamageTypeTags.IS_PROJECTILE))
+            consumeIntegrity(GolemConfig.basaltMeleeHitCost());
+        return super.hurtServer(level, source, damage);
     }
 
     // ---- crumbling (particles come from the base through getMaterialState) ----

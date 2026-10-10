@@ -176,4 +176,106 @@ public final class BasaltGolemTests {
         Arena.removePlayer(helper, owner);
         helper.succeed();
     }
+
+    // ---- projectile magnet and melee hits (spec v2 6.3) ----
+
+    private static net.minecraft.world.entity.projectile.arrow.Arrow arrowFrom(GameTestHelper helper,
+            net.minecraft.world.entity.Entity owner, Vec3 relative) {
+        var arrow = new net.minecraft.world.entity.projectile.arrow.Arrow(helper.getLevel(),
+            (net.minecraft.world.entity.LivingEntity) owner, new ItemStack(Items.ARROW), null);
+        var pos = helper.absoluteVec(relative);
+        arrow.setPos(pos.x, pos.y, pos.z);
+        arrow.setDeltaMovement(Vec3.ZERO);
+        arrow.setNoGravity(true);
+        helper.getLevel().addFreshEntity(arrow);
+        return arrow;
+    }
+
+    /** V2-T13 */
+    @GameTest(structure = Arena.STRUCTURE)
+    public static void absorbsSkeletonArrow(GameTestHelper helper) {
+        Arena.floor(helper);
+        var golem = helper.spawnWithNoFreeWill(ModEntities.BASALT_GOLEM.get(), CENTER);
+        var skeleton = helper.spawnWithNoFreeWill(net.minecraft.world.entity.EntityTypes.SKELETON, new BlockPos(7, 1, 7));
+        skeleton.setNoAi(true);
+        var arrow = arrowFrom(helper, skeleton, new Vec3(6.0, 2.0, 4.5));
+        helper.runAfterDelay(2, () -> {
+            helper.assertTrue(arrow.isRemoved(), "arrow absorbed");
+            helper.assertTrue(golem.getIntegrity() >= 95 && golem.getIntegrity() <= 96,
+                "arrow costs 4 integrity, got " + golem.getIntegrity());
+            helper.succeed();
+        });
+    }
+
+    /** V2-T14 */
+    @GameTest(structure = Arena.STRUCTURE)
+    public static void ignoresPlayerArrow(GameTestHelper helper) {
+        Arena.floor(helper);
+        var golem = helper.spawnWithNoFreeWill(ModEntities.BASALT_GOLEM.get(), CENTER);
+        var player = Arena.survivalPlayer(helper, new Vec3(7.5, 1, 7.5));
+        var arrow = arrowFrom(helper, player, new Vec3(6.0, 2.0, 4.5));
+        helper.runAfterDelay(5, () -> {
+            helper.assertTrue(!arrow.isRemoved(), "player arrow untouched");
+            helper.assertTrue(golem.getIntegrity() >= 99, "no integrity lost, got " + golem.getIntegrity());
+            Arena.removePlayer(helper, player);
+            helper.succeed();
+        });
+    }
+
+    /** V2-T15 */
+    @GameTest(structure = Arena.STRUCTURE)
+    public static void absorbsGhastFireballWithoutExplosion(GameTestHelper helper) {
+        Arena.floor(helper);
+        var golem = helper.spawnWithNoFreeWill(ModEntities.BASALT_GOLEM.get(), CENTER);
+        var ghast = helper.spawnWithNoFreeWill(net.minecraft.world.entity.EntityTypes.GHAST, new BlockPos(1, 2, 1));
+        ghast.setNoAi(true);
+        var toGolem = new Vec3(-0.3, 0.0, 0.0);
+        var fireball = new net.minecraft.world.entity.projectile.hurtingprojectile.LargeFireball(
+            helper.getLevel(), ghast, toGolem, 3);
+        var pos = helper.absoluteVec(new Vec3(6.5, 2.0, 4.5));
+        fireball.setPos(pos.x, pos.y, pos.z);
+        fireball.setDeltaMovement(toGolem);
+        helper.getLevel().addFreshEntity(fireball);
+        helper.runAfterDelay(6, () -> {
+            helper.assertTrue(fireball.isRemoved(), "fireball absorbed");
+            helper.assertTrue(golem.getIntegrity() >= 84 && golem.getIntegrity() <= 85,
+                "large fireball costs 15, got " + golem.getIntegrity());
+            for (int x = 2; x <= 6; x++)
+                for (int z = 2; z <= 6; z++)
+                    helper.assertBlockPresent(Blocks.STONE, new BlockPos(x, 0, z));
+            helper.succeed();
+        });
+    }
+
+    /** Review Focus 5 */
+    @GameTest(structure = Arena.STRUCTURE)
+    public static void ignoresSnowGolemSnowball(GameTestHelper helper) {
+        Arena.floor(helper);
+        helper.spawnWithNoFreeWill(ModEntities.BASALT_GOLEM.get(), CENTER);
+        var snowGolem = helper.spawnWithNoFreeWill(net.minecraft.world.entity.EntityTypes.SNOW_GOLEM, new BlockPos(7, 1, 7));
+        snowGolem.setNoAi(true);
+        var snowball = new net.minecraft.world.entity.projectile.throwableitemprojectile.Snowball(
+            helper.getLevel(), snowGolem, new ItemStack(Items.SNOWBALL));
+        var pos = helper.absoluteVec(new Vec3(6.0, 2.0, 4.5));
+        snowball.setPos(pos.x, pos.y, pos.z);
+        snowball.setDeltaMovement(Vec3.ZERO);
+        snowball.setNoGravity(true);
+        helper.getLevel().addFreshEntity(snowball);
+        helper.runAfterDelay(5, () -> {
+            helper.assertTrue(!snowball.isRemoved(), "snowball from a snow golem untouched");
+            helper.succeed();
+        });
+    }
+
+    @GameTest(structure = Arena.STRUCTURE)
+    public static void meleeHitCostsIntegrity(GameTestHelper helper) {
+        Arena.floor(helper);
+        var golem = helper.spawnWithNoFreeWill(ModEntities.BASALT_GOLEM.get(), CENTER);
+        var zombie = helper.spawnWithNoFreeWill(net.minecraft.world.entity.EntityTypes.HUSK, new BlockPos(7, 1, 7));
+        zombie.setNoAi(true);
+        golem.hurtServer(helper.getLevel(), helper.getLevel().damageSources().mobAttack(zombie), 1.0F);
+        helper.assertTrue(golem.getIntegrity() >= 97 && golem.getIntegrity() <= 98,
+            "melee hit costs 2, got " + golem.getIntegrity());
+        helper.succeed();
+    }
 }
