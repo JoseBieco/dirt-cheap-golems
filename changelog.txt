@@ -1,3 +1,19 @@
+Dirt Cheap Golems 2.0.0
+=======================
+ - New golems:
+     End Stone Golem: flies, collects dropped items in its home radius and teleports them into a linked container (4 items per integrity)
+     Gravel Golem: artillery that throws flint shards (16 blocks) and leaps to bury hostile mobs under falling gravel
+     Basalt / Deepslate Golem: owner-bound shield that follows its owner, intercepts ranged threats and absorbs hostile projectiles
+ - Golem Core command mode (sneak):
+     Sneak + click an inventory block links it to the core; sneak + click the air clears the link
+     Sneak + click a golem gives it an order (Basalt Golem: FOLLOW / GUARD, owner only)
+ - BREAKING CHANGE: sneak-clicking a pillar with a Golem Core no longer creates a golem; use a normal click
+ - Spawn eggs now use a single tinted model, one color pair per golem
+ - New block tags: materials/end_stone, materials/gravel, materials/basalt
+ - New config sections: end_stone, gravel, basalt
+ - The Golem Core recipe now shows in the recipe book
+ - Version bumped to 2.0.0
+
 26.3 Changelog
 66.0
 ====
