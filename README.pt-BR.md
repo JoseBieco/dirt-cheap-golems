@@ -4,11 +4,11 @@
 
 [English](README.md)
 
-> Transforme os blocos que ninguém quer (terra, areia, netherrack) em pequenos golems servos. Eles trabalham, se desgastam, e você constrói mais.
+> Transforme os blocos que ninguém quer (terra, areia, netherrack, cascalho, basalto, end stone) em pequenos golems servos. Eles trabalham, se desgastam, e você constrói mais.
 
-**Minecraft 26.3 · Forge 66.0.9 · v1.0.0**
+**Minecraft 26.3 · Forge 66.0.9 · v2.0.0**
 
-Todo mundo de sobrevivência acaba com baús cheios de terra, areia e netherrack. O Dirt Cheap Golems dá um emprego a esses blocos: dois blocos e um núcleo barato viram um pequeno golem que cuida da plantação, defende ou ilumina a sua base. O porém: **os golems são descartáveis**. Eles se desgastam ao trabalhar, com o passar do tempo e quando o clima não ajuda, e por isso você sempre volta a precisar de mais blocos.
+Todo mundo de sobrevivência acaba com baús cheios de terra, areia, netherrack, cascalho, basalto e pedra do End. O Dirt Cheap Golems dá um emprego a esses blocos: dois blocos e um núcleo barato viram um pequeno golem que cuida da plantação, defende ou ilumina a sua base. O porém: **os golems são descartáveis**. Eles se desgastam ao trabalhar, com o passar do tempo e quando o clima não ajuda, e por isso você sempre volta a precisar de mais blocos.
 
 ---
 
@@ -32,7 +32,7 @@ O único item craftável do mod. É ele que dá vida a um pilar de blocos.
 2. Use um **Núcleo de Golem** em qualquer um dos dois blocos.
 3. O pilar some e o golem aparece onde estava o bloco de baixo. Esse ponto vira a **casa** dele.
 
-- Pilares mistos (ex.: terra em cima de areia) não fazem nada, e o núcleo não é gasto.
+- Pilares mistos (ex.: terra em cima de areia) não fazem nada, e o núcleo não é gasto. Use o clique normal: **agachado nunca cria golem** (veja [Dando ordens aos golems](#dando-ordens-aos-golems)).
 - No modo criativo, o núcleo não é consumido.
 - Quem não pode construir naquele lugar (modo aventura, proteção de spawn) não consegue criar golems.
 
@@ -41,6 +41,25 @@ O único item craftável do mod. É ele que dá vida a um pilar de blocos.
 | Terra, Terra Grossa | Golem de Terra |
 | Areia, Areia Vermelha | Golem de Areia |
 | Netherrack | Golem de Netherrack |
+| End Stone | Golem de End Stone |
+| Cascalho | Golem de Cascalho |
+| Basalto, Basalto Polido, Basalto Liso, Deepslate, Deepslate Lapidado (misturáveis) | Golem de Basalto |
+
+## Dando ordens aos golems
+
+O Núcleo de Golem também tem um **modo de comando**, usado **agachado**:
+
+| Ação | Resultado |
+|---|---|
+| Clicar num bloco (sem agachar) | **Ativação**: cria um golem a partir de um pilar |
+| Agachado + clicar num bloco **com inventário** (baú, barril, caixa de shulker, armazenamento de outros mods) | **Vincula** o bloco ao núcleo (brilho de encantamento e tooltip mostram o alvo) |
+| Agachado + clicar em qualquer outro bloco | Nada. Nunca cria golem |
+| Agachado + clicar num golem | Dá uma **ordem** ao golem (ex.: troca o modo do Golem de Basalto) |
+| Agachado + clicar no ar | **Limpa** o vínculo |
+
+> **Mudou na 2.0.0:** clicar agachado num pilar **não cria mais golem**. Use o clique normal.
+
+Comandos nunca consomem o núcleo. O vínculo fica na pilha de itens, então vale para todos os núcleos daquela pilha. A receita do Núcleo de Golem também aparece no livro de receitas.
 
 ---
 
@@ -82,6 +101,44 @@ Uma **luz ambulante** (nível de luz 12) que patrulha a sua base. Quando um mob 
 - **Fraqueza:** se tocar em **água ou chuva**, vira na hora um bloco de **Pedra**.
 - **Ao desmoronar:** 1 Carvão Vegetal.
 
+### Golem de End Stone: o Coletor
+
+![Golem de End Stone](docs/assets/end_stone_golem.jpg)
+
+Um golem **voador** que paira de 0,5 a 1,5 bloco acima do chão quando está parado. Vincule um contêiner a um núcleo (agachado + clicar num baú) e crie o golem com um núcleo da mesma pilha: ele **coleta itens caídos dentro do raio da casa e os teleporta para o contêiner vinculado**.
+
+- O contêiner precisa estar a até **32 blocos da casa do golem**, na mesma dimensão.
+- Ignora itens que ainda têm atraso de coleta (como os que um jogador acabou de jogar).
+- Se o contêiner for quebrado, o vínculo é limpo e ele para de coletar.
+- **Desgaste:** 1 de integridade a cada **4 itens**.
+- **Ao desmoronar:** 50% de chance de dropar 1 End Stone.
+
+### Golem de Cascalho: a Artilharia
+
+![Golem de Cascalho](docs/assets/gravel_golem.jpg)
+
+Uma peça de artilharia móvel. Arremessa **estilhaços de sílex** em **mobs hostis** a até **16 blocos**, preferindo alvos **mais baixos** que ele (muralhas e torres são o território dele). Os estilhaços atravessam jogadores, aldeões e outros mobs não hostis.
+
+Cada acerto causa 3 de dano e aplica **Lentidão I** por 3 s.
+
+- **Salto:** quando um hostil chega perto, ou está abaixo e ao alcance, o golem **salta** sobre ele e o **enterra sob cascalho caindo**. O cascalho só é colocado em ar e respeita a regra `mobGriefing` e a opção `leapPlacesBlocks`; caso contrário, solta itens de cascalho.
+- **Desgaste:** 3 de integridade por tiro.
+- **Ao desmoronar:** 50% de chance de dropar 1 Cascalho.
+
+### Golem de Basalto / Deepslate: o Escudo
+
+![Golem de Basalto](docs/assets/basalt_golem.jpg)
+
+Um escudo vivo para o **dono**, o jogador que o criou. Monte um pilar com qualquer mistura de basalto, basalto polido, basalto liso, deepslate ou deepslate lapidado. Golems de ovo de spawn não têm dono e ficam em GUARD.
+
+Dois modos, alternados por **agachado + núcleo no golem** (**só o dono** consegue):
+- **FOLLOW:** segue o dono e se posiciona para interceptar ameaças à distância apontadas para ele.
+- **GUARD:** mantém a posição perto da casa.
+
+Ele **absorve projéteis de mobs hostis** que chegam a até 2,5 blocos. Custo por projétil: flecha ou tridente 4, bola de fogo pequena 6, bola de fogo de ghast 15 (**não** explode), qualquer outro 4. Um golpe corpo a corpo custa 2.
+
+- **Ao desmoronar:** 50% de chance de dropar o **bloco de origem** (o de baixo do pilar).
+
 ---
 
 ## Integridade: por que os golems não duram
@@ -106,14 +163,9 @@ Quais blocos criam cada golem é definido por tags de bloco, alteráveis por dat
 | `#dirtcheapgolems:materials/dirt` | `dirt`, `coarse_dirt` |
 | `#dirtcheapgolems:materials/sand` | `sand`, `red_sand` |
 | `#dirtcheapgolems:materials/netherrack` | `netherrack` |
-
-## Próximos golems
-
-Planejados (só conceito, ainda não implementados):
-
-- **Golem de End Stone:** vinculado a um baú, aspira itens do chão e os teleporta para dentro; cada item custa integridade.
-- **Golem de Cascalho:** artilharia de muralha que arremessa pedaços de si mesmo e pode desabar sobre um inimigo.
-- **Golem de Basalto / Deepslate:** um escudo vivo que intercepta flechas e bolas de fogo apontadas para você.
+| `#dirtcheapgolems:materials/end_stone` | `end_stone` |
+| `#dirtcheapgolems:materials/gravel` | `gravel` |
+| `#dirtcheapgolems:materials/basalt` | `basalt`, `polished_basalt`, `smooth_basalt`, `deepslate`, `cobbled_deepslate` |
 
 ---
 
@@ -133,7 +185,7 @@ O Gradle precisa do JDK 21+ para iniciar; o build usa um toolchain Java 25 (baix
 
 As texturas provisórias são geradas por `python tools/gen_textures.py`.
 
-Spec de design: [`docs/specs/2026-10-09-dirt-cheap-golems-design.md`](docs/specs/2026-10-09-dirt-cheap-golems-design.md)
+Specs de design: [v1](docs/specs/2026-10-09-dirt-cheap-golems-design.md), [v2](docs/specs/2026-10-09-dirt-cheap-golems-v2-design.md)
 
 ## Autor
 

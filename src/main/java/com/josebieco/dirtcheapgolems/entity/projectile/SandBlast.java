@@ -1,7 +1,6 @@
 package com.josebieco.dirtcheapgolems.entity.projectile;
 
 import com.josebieco.dirtcheapgolems.config.GolemConfig;
-import com.josebieco.dirtcheapgolems.entity.AbstractCheapGolem;
 import com.josebieco.dirtcheapgolems.registry.ModEffects;
 import com.josebieco.dirtcheapgolems.registry.ModEntities;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -12,10 +11,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.golem.IronGolem;
-import net.minecraft.world.entity.animal.golem.SnowGolem;
-import net.minecraft.world.entity.monster.Enemy;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -49,11 +44,9 @@ public class SandBlast extends ThrowableItemProjectile {
 
     /**
      * Only hostile mobs stop the blast; it passes through players, golems and passive mobs (spec §5.8).
-     * Golems are checked explicitly in case another mod marks one as an {@link Enemy}.
      */
     public static boolean isValidTarget(Entity entity) {
-        return entity instanceof Enemy && !(entity instanceof Player) && !(entity instanceof AbstractCheapGolem)
-            && !(entity instanceof IronGolem) && !(entity instanceof SnowGolem);
+        return HostileTargets.isValid(entity);
     }
 
     @Override

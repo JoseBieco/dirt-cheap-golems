@@ -4,11 +4,11 @@
 
 [Português (Brasil)](README.pt-BR.md)
 
-> Turn the blocks nobody wants (dirt, sand, netherrack) into tiny servant golems. They work hard, wear out, and you build more.
+> Turn the blocks nobody wants (dirt, sand, netherrack, gravel, basalt, end stone) into tiny servant golems. They work hard, wear out, and you build more.
 
-**Minecraft 26.3 · Forge 66.0.9 · v1.0.0**
+**Minecraft 26.3 · Forge 66.0.9 · v2.0.0**
 
-Every survival world ends up with chests full of dirt, sand and netherrack. Dirt Cheap Golems gives those blocks a job: two blocks and a cheap core become a small golem that farms, defends or lights up your base. The catch: **golems are disposable**. They wear out as they work, as time passes and when the weather turns against them, so you keep coming back for more blocks.
+Every survival world ends up with chests full of dirt, sand, netherrack, gravel, basalt and end stone. Dirt Cheap Golems gives those blocks a job: two blocks and a cheap core become a small golem that farms, defends or lights up your base. The catch: **golems are disposable**. They wear out as they work, as time passes and when the weather turns against them, so you keep coming back for more blocks.
 
 ---
 
@@ -32,7 +32,7 @@ The only crafted item in the mod. It brings a pillar of blocks to life.
 2. Use a **Golem Core** on either block.
 3. The pillar disappears and the golem appears where the bottom block was. That spot becomes its **home**.
 
-- Mixed pillars (e.g. dirt on top of sand) do nothing, and the core is not consumed.
+- Mixed pillars (e.g. dirt on top of sand) do nothing, and the core is not consumed. Use a normal click: **sneaking never creates a golem** (see [Commanding golems](#commanding-golems)).
 - In creative mode the core is not consumed.
 - Players who can't build at that spot (adventure mode, spawn protection) can't create golems.
 
@@ -41,6 +41,25 @@ The only crafted item in the mod. It brings a pillar of blocks to life.
 | Dirt, Coarse Dirt | Dirt Golem |
 | Sand, Red Sand | Sand Golem |
 | Netherrack | Netherrack Golem |
+| End Stone | End Stone Golem |
+| Gravel | Gravel Golem |
+| Basalt, Polished Basalt, Smooth Basalt, Deepslate, Cobbled Deepslate (mixable) | Basalt Golem |
+
+## Commanding golems
+
+The Golem Core also has a **command mode**, used while **sneaking**:
+
+| Action | Result |
+|---|---|
+| Click a block (not sneaking) | **Activation**: creates a golem from a pillar |
+| Sneak + click a block **with an inventory** (chest, barrel, shulker box, modded storage) | **Links** that block to the core (enchantment glint and tooltip show the target) |
+| Sneak + click any other block | Nothing. It never creates a golem |
+| Sneak + click a golem | Gives the golem an **order** (e.g. switches the Basalt Golem's mode) |
+| Sneak + click the air | **Clears** the link |
+
+> **Changed in 2.0.0:** sneak-clicking a pillar **no longer creates a golem**. Use a normal click.
+
+Commands never consume the core. The link is stored on the item stack, so it applies to every core in that stack. The Golem Core recipe also shows up in the recipe book.
 
 ---
 
@@ -82,6 +101,44 @@ A **walking light** (light level 12) that patrols your base. When a hostile mob 
 - **Weakness:** if it touches **water or rain**, it instantly turns into a block of **Stone**.
 - **Crumbles into:** 1 Charcoal.
 
+### End Stone Golem: the Collector
+
+![End Stone Golem](docs/assets/end_stone_golem.jpg)
+
+A **flying** golem that hovers 0.5 to 1.5 blocks above the ground when idle. Link a container to a core (sneak + click a chest), then create the golem with a core from that same stack: it **collects dropped items within its home radius and teleports them into the linked container**.
+
+- The container must be within **32 blocks of the golem's home**, in the same dimension.
+- It ignores items that still have a pickup delay (like a player's just-thrown drops).
+- If the container is broken, the link is cleared and it stops collecting.
+- **Wears out:** 1 integrity per **4 items**.
+- **Crumbles into:** 50% chance of 1 End Stone.
+
+### Gravel Golem: the Artillery
+
+![Gravel Golem](docs/assets/gravel_golem.jpg)
+
+A mobile artillery piece. It throws **flint shards** at **hostile mobs** up to **16 blocks** away, preferring targets **lower** than itself (walls and towers are its home turf). Shards fly through players, villagers and other non-hostiles.
+
+Each hit deals 3 damage and applies **Slowness I** for 3 s.
+
+- **Leap:** when a hostile gets close, or sits below it within reach, the golem **leaps** onto it and **buries it under falling gravel**. Gravel is only placed into air and respects the `mobGriefing` game rule and the `leapPlacesBlocks` config option; otherwise it drops gravel items instead.
+- **Wears out:** 3 integrity per shot.
+- **Crumbles into:** 50% chance of 1 Gravel.
+
+### Basalt / Deepslate Golem: the Shield
+
+![Basalt Golem](docs/assets/basalt_golem.jpg)
+
+A living shield for **its owner**, the player who created it. Build a pillar from any mix of basalt, polished basalt, smooth basalt, deepslate or cobbled deepslate. Golems from spawn eggs have no owner and stay in GUARD.
+
+Two modes, switched by **sneak + core on the golem** (**only the owner** can do this):
+- **FOLLOW:** follows the owner and moves to intercept ranged threats aimed at them.
+- **GUARD:** holds position near its home.
+
+It **absorbs hostile-mob projectiles** that come within 2.5 blocks. Cost per projectile: arrow or trident 4, small fireball 6, ghast fireball 15 (it does **not** explode), anything else 4. A melee hit costs 2.
+
+- **Crumbles into:** 50% chance of its **source block** (the bottom block of the pillar).
+
 ---
 
 ## Integrity: why golems don't last
@@ -106,14 +163,9 @@ Which blocks create each golem is controlled by block tags and can be changed wi
 | `#dirtcheapgolems:materials/dirt` | `dirt`, `coarse_dirt` |
 | `#dirtcheapgolems:materials/sand` | `sand`, `red_sand` |
 | `#dirtcheapgolems:materials/netherrack` | `netherrack` |
-
-## Roadmap
-
-Planned golems (concept only, not implemented yet):
-
-- **End Stone Golem:** links to a chest, vacuums dropped items and teleports them inside; every item costs integrity.
-- **Gravel Golem:** wall artillery that throws pieces of itself and can collapse onto an enemy.
-- **Basalt / Deepslate Golem:** a living shield that intercepts arrows and fireballs aimed at you.
+| `#dirtcheapgolems:materials/end_stone` | `end_stone` |
+| `#dirtcheapgolems:materials/gravel` | `gravel` |
+| `#dirtcheapgolems:materials/basalt` | `basalt`, `polished_basalt`, `smooth_basalt`, `deepslate`, `cobbled_deepslate` |
 
 ---
 
@@ -133,7 +185,7 @@ Requires JDK 21+ to launch Gradle; the build uses a Java 25 toolchain (downloade
 
 Placeholder textures are generated by `python tools/gen_textures.py`.
 
-Design spec: [`docs/specs/2026-10-09-dirt-cheap-golems-design.md`](docs/specs/2026-10-09-dirt-cheap-golems-design.md)
+Design specs: [v1](docs/specs/2026-10-09-dirt-cheap-golems-design.md), [v2](docs/specs/2026-10-09-dirt-cheap-golems-v2-design.md)
 
 ## Author
 

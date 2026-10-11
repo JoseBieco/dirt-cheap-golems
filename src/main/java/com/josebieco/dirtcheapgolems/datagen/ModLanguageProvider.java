@@ -37,6 +37,23 @@ public final class ModLanguageProvider extends LanguageProvider {
         addItem(ModItems.SAND_GOLEM_SPAWN_EGG, t("Sand Golem Spawn Egg", "Ovo Gerador de Golem de Areia"));
         addEntityType(ModEntities.NETHERRACK_GOLEM, t("Netherrack Golem", "Golem de Netherrack"));
         addItem(ModItems.NETHERRACK_GOLEM_SPAWN_EGG, t("Netherrack Golem Spawn Egg", "Ovo Gerador de Golem de Netherrack"));
+        addEntityType(ModEntities.END_STONE_GOLEM, t("End Stone Golem", "Golem de End Stone"));
+        addItem(ModItems.END_STONE_GOLEM_SPAWN_EGG, t("End Stone Golem Spawn Egg", "Ovo Gerador de Golem de End Stone"));
+        add("message.dirtcheapgolems.end_stone.linked", t("Linked", "Vinculado"));
+        add("message.dirtcheapgolems.end_stone.too_far", t("Too far from home", "Muito longe da casa"));
+        add("message.dirtcheapgolems.end_stone.other_dimension", t("Another dimension", "Outra dimensão"));
+        add("message.dirtcheapgolems.end_stone.no_inventory", t("No inventory", "Sem inventário"));
+        add("message.dirtcheapgolems.core.linked", t("Linked to %s", "Vinculado a %s"));
+        add("message.dirtcheapgolems.core.unlinked", t("Link cleared", "V\u00ednculo removido"));
+        add("tooltip.dirtcheapgolems.core.linked", t("Linked to: %s, %s, %s (%s)", "Vinculado a: %s, %s, %s (%s)"));
+        addEntityType(ModEntities.GRAVEL_GOLEM, t("Gravel Golem", "Golem de Cascalho"));
+        addItem(ModItems.GRAVEL_GOLEM_SPAWN_EGG, t("Gravel Golem Spawn Egg", "Ovo Gerador de Golem de Cascalho"));
+        addEntityType(ModEntities.BASALT_GOLEM, t("Basalt Golem", "Golem de Basalto"));
+        addItem(ModItems.BASALT_GOLEM_SPAWN_EGG, t("Basalt Golem Spawn Egg", "Ovo Gerador de Golem de Basalto"));
+        add("message.dirtcheapgolems.basalt.not_yours", t("This golem isn't yours", "Este golem não é seu"));
+        add("message.dirtcheapgolems.basalt.mode.follow", t("Following", "Seguindo"));
+        add("message.dirtcheapgolems.basalt.mode.guard", t("Guarding", "Guardando"));
+        addEntityType(ModEntities.FLINT_SHARD, t("Flint Shard", "Estilha\u00e7o de S\u00edlex"));
         addEntityType(ModEntities.SAND_BLAST, t("Sand Blast", "Rajada de Areia"));
         addEffect(ModEffects.SAND_IN_EYES, t("Sand in Eyes", "Areia nos Olhos"));
     }

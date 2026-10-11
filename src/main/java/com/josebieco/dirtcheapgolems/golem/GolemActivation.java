@@ -43,6 +43,7 @@ public final class GolemActivation {
             return InteractionResult.PASS;
         }
         golem.setHomePos(pillar.bottom());
+        golem.notifyCreated(material, player);
 
         if (!player.hasInfiniteMaterials()) stack.shrink(1);
 

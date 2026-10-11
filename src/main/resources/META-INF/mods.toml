@@ -4,10 +4,10 @@ license="All Rights Reserved"
 
 [[mods]]
 modId="dirtcheapgolems"
-version="1.0.0"
+version="2.0.0"
 displayName="Dirt Cheap Golems"
 authors="José Bieco"
-description='''Turn cheap, abundant blocks (dirt, sand, netherrack) into small temporary servant golems.'''
+description='''Turn cheap, abundant blocks (dirt, sand, netherrack, end stone, gravel, basalt and deepslate) into small temporary servant golems.'''
 
 [[dependencies.dirtcheapgolems]]
     modId="forge"

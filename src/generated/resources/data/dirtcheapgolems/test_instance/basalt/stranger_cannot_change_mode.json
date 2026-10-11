@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:function",
+  "dimension": "minecraft:overworld",
+  "environment": "minecraft:default",
+  "function": "dirtcheapgolems:basalt/stranger_cannot_change_mode",
+  "manual_only": false,
+  "max_attempts": 1,
+  "max_ticks": 100,
+  "padding": 0,
+  "required": true,
+  "required_successes": 1,
+  "rotation": "none",
+  "setup_ticks": 0,
+  "sky_access": false,
+  "structure": "forge:empty9x5x9"
+}

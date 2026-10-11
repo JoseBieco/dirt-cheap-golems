@@ -37,6 +37,38 @@ public final class GolemConfig {
     private static final ForgeConfigSpec.BooleanValue NETHERRACK_BLAST_HURTS_PLAYERS;
     private static final ForgeConfigSpec.DoubleValue NETHERRACK_DROP_CHANCE;
 
+    // end_stone
+    private static final ForgeConfigSpec.IntValue END_STONE_LINK_RANGE;
+    private static final ForgeConfigSpec.IntValue END_STONE_ITEMS_PER_INTEGRITY;
+    private static final ForgeConfigSpec.DoubleValue END_STONE_PICKUP_RANGE;
+    private static final ForgeConfigSpec.DoubleValue END_STONE_FLY_SPEED;
+    private static final ForgeConfigSpec.DoubleValue END_STONE_DROP_CHANCE;
+
+    // gravel
+    private static final ForgeConfigSpec.IntValue GRAVEL_ARTILLERY_RANGE;
+    private static final ForgeConfigSpec.IntValue GRAVEL_ARTILLERY_COOLDOWN;
+    private static final ForgeConfigSpec.IntValue GRAVEL_SHOT_COST;
+    private static final ForgeConfigSpec.DoubleValue GRAVEL_SHARD_DAMAGE;
+    private static final ForgeConfigSpec.IntValue GRAVEL_SLOWNESS_TICKS;
+    private static final ForgeConfigSpec.DoubleValue GRAVEL_LEAP_TRIGGER_RANGE;
+    private static final ForgeConfigSpec.IntValue GRAVEL_LEAP_BELOW_HORIZONTAL;
+    private static final ForgeConfigSpec.IntValue GRAVEL_LEAP_BELOW_DEPTH;
+    private static final ForgeConfigSpec.DoubleValue GRAVEL_LEAP_IMPACT_DAMAGE;
+    private static final ForgeConfigSpec.IntValue GRAVEL_LEAP_BLOCKS;
+    private static final ForgeConfigSpec.BooleanValue GRAVEL_LEAP_PLACES_BLOCKS;
+    private static final ForgeConfigSpec.DoubleValue GRAVEL_DROP_CHANCE;
+    // basalt
+    private static final ForgeConfigSpec.DoubleValue BASALT_FOLLOW_DISTANCE;
+    private static final ForgeConfigSpec.IntValue BASALT_MAX_FOLLOW_DISTANCE;
+    private static final ForgeConfigSpec.IntValue BASALT_THREAT_RANGE;
+    private static final ForgeConfigSpec.DoubleValue BASALT_MAGNET_RADIUS;
+    private static final ForgeConfigSpec.IntValue BASALT_ARROW_COST;
+    private static final ForgeConfigSpec.IntValue BASALT_SMALL_FIREBALL_COST;
+    private static final ForgeConfigSpec.IntValue BASALT_LARGE_FIREBALL_COST;
+    private static final ForgeConfigSpec.IntValue BASALT_OTHER_PROJECTILE_COST;
+    private static final ForgeConfigSpec.IntValue BASALT_MELEE_HIT_COST;
+    private static final ForgeConfigSpec.DoubleValue BASALT_DROP_CHANCE;
+
     static {
         BUILDER.push("general");
         PASSIVE_DECAY_TICKS = BUILDER.comment("Ticks per -1 passive integrity").defineInRange("passiveDecayTicks", 600, 20, 72000);
@@ -72,6 +104,42 @@ public final class GolemConfig {
         NETHERRACK_BLAST_HURTS_PLAYERS = BUILDER.comment("Whether the thermal blast hurts players").define("blastHurtsPlayers", false);
         NETHERRACK_DROP_CHANCE = BUILDER.comment("Chance to drop charcoal when crumbling").defineInRange("dropChance", 1.0, 0.0, 1.0);
         BUILDER.pop();
+
+        BUILDER.push("end_stone");
+        END_STONE_LINK_RANGE = BUILDER.comment("Max distance (blocks) between the linked container and home").defineInRange("linkRange", 32, 1, 128);
+        END_STONE_ITEMS_PER_INTEGRITY = BUILDER.comment("Items teleported per -1 integrity").defineInRange("itemsPerIntegrity", 4, 1, 64);
+        END_STONE_PICKUP_RANGE = BUILDER.comment("Distance (blocks) at which an item is teleported").defineInRange("pickupRange", 1.5, 0.5, 8.0);
+        END_STONE_FLY_SPEED = BUILDER.comment("Flight speed").defineInRange("flySpeed", 0.4, 0.05, 2.0);
+        END_STONE_DROP_CHANCE = BUILDER.comment("Chance to drop end stone when crumbling").defineInRange("dropChance", 0.5, 0.0, 1.0);
+        BUILDER.pop();
+
+        BUILDER.push("gravel");
+        GRAVEL_ARTILLERY_RANGE = BUILDER.comment("Firing range (blocks)").defineInRange("artilleryRange", 16, 1, 64);
+        GRAVEL_ARTILLERY_COOLDOWN = BUILDER.comment("Ticks between shots").defineInRange("artilleryCooldown", 60, 1, 1200);
+        GRAVEL_SHOT_COST = BUILDER.comment("Integrity lost per shot").defineInRange("shotCost", 3, 0, 100);
+        GRAVEL_SHARD_DAMAGE = BUILDER.comment("Flint shard damage").defineInRange("shardDamage", 3.0, 0.0, 100.0);
+        GRAVEL_SLOWNESS_TICKS = BUILDER.comment("Slowness I duration (ticks)").defineInRange("slownessTicks", 60, 0, 12000);
+        GRAVEL_LEAP_TRIGGER_RANGE = BUILDER.comment("Distance that triggers the leap").defineInRange("leapTriggerRange", 2.5, 0.5, 8.0);
+        GRAVEL_LEAP_BELOW_HORIZONTAL = BUILDER.comment("Horizontal reach of the downward leap").defineInRange("leapBelowHorizontal", 2, 0, 8);
+        GRAVEL_LEAP_BELOW_DEPTH = BUILDER.comment("Max depth of the downward leap").defineInRange("leapBelowDepth", 6, 1, 32);
+        GRAVEL_LEAP_IMPACT_DAMAGE = BUILDER.comment("Leap impact damage").defineInRange("leapImpactDamage", 4.0, 0.0, 100.0);
+        GRAVEL_LEAP_BLOCKS = BUILDER.comment("Gravel blocks spawned by the collapse").defineInRange("leapBlocks", 4, 1, 9);
+        GRAVEL_LEAP_PLACES_BLOCKS = BUILDER.comment("If false, the collapse drops gravel items instead of blocks").define("leapPlacesBlocks", true);
+        GRAVEL_DROP_CHANCE = BUILDER.comment("Chance to drop gravel when crumbling normally").defineInRange("dropChance", 0.5, 0.0, 1.0);
+        BUILDER.pop();
+
+        BUILDER.push("basalt");
+        BASALT_FOLLOW_DISTANCE = BUILDER.comment("Distance kept from the owner while following").defineInRange("followDistance", 2.5, 1.0, 8.0);
+        BASALT_MAX_FOLLOW_DISTANCE = BUILDER.comment("Beyond this distance from the owner the golem stops and waits").defineInRange("maxFollowDistance", 24, 4, 128);
+        BASALT_THREAT_RANGE = BUILDER.comment("Range to detect ranged attackers").defineInRange("threatRange", 16, 1, 64);
+        BASALT_MAGNET_RADIUS = BUILDER.comment("Radius of the projectile magnet").defineInRange("magnetRadius", 2.5, 0.5, 8.0);
+        BASALT_ARROW_COST = BUILDER.comment("Integrity lost per absorbed arrow or trident").defineInRange("arrowCost", 4, 0, 100);
+        BASALT_SMALL_FIREBALL_COST = BUILDER.comment("Integrity lost per absorbed small fireball").defineInRange("smallFireballCost", 6, 0, 100);
+        BASALT_LARGE_FIREBALL_COST = BUILDER.comment("Integrity lost per absorbed ghast fireball").defineInRange("largeFireballCost", 15, 0, 100);
+        BASALT_OTHER_PROJECTILE_COST = BUILDER.comment("Integrity lost per other absorbed hostile projectile").defineInRange("otherProjectileCost", 4, 0, 100);
+        BASALT_MELEE_HIT_COST = BUILDER.comment("Integrity lost per melee hit received").defineInRange("meleeHitCost", 2, 0, 100);
+        BASALT_DROP_CHANCE = BUILDER.comment("Chance to drop the source block when crumbling").defineInRange("dropChance", 0.5, 0.0, 1.0);
+        BUILDER.pop();
     }
 
     public static final ForgeConfigSpec SPEC = BUILDER.build();
@@ -104,4 +172,33 @@ public final class GolemConfig {
     public static int netherrackBlastCost() { return NETHERRACK_BLAST_COST.get(); }
     public static boolean netherrackBlastHurtsPlayers() { return NETHERRACK_BLAST_HURTS_PLAYERS.get(); }
     public static double netherrackDropChance() { return NETHERRACK_DROP_CHANCE.get(); }
+
+    public static int endStoneLinkRange() { return END_STONE_LINK_RANGE.get(); }
+    public static int endStoneItemsPerIntegrity() { return END_STONE_ITEMS_PER_INTEGRITY.get(); }
+    public static double endStonePickupRange() { return END_STONE_PICKUP_RANGE.get(); }
+    public static double endStoneFlySpeed() { return END_STONE_FLY_SPEED.get(); }
+    public static double endStoneDropChance() { return END_STONE_DROP_CHANCE.get(); }
+
+    public static int gravelArtilleryRange() { return GRAVEL_ARTILLERY_RANGE.get(); }
+    public static int gravelArtilleryCooldown() { return GRAVEL_ARTILLERY_COOLDOWN.get(); }
+    public static int gravelShotCost() { return GRAVEL_SHOT_COST.get(); }
+    public static double gravelShardDamage() { return GRAVEL_SHARD_DAMAGE.get(); }
+    public static int gravelSlownessTicks() { return GRAVEL_SLOWNESS_TICKS.get(); }
+    public static double gravelLeapTriggerRange() { return GRAVEL_LEAP_TRIGGER_RANGE.get(); }
+    public static int gravelLeapBelowHorizontal() { return GRAVEL_LEAP_BELOW_HORIZONTAL.get(); }
+    public static int gravelLeapBelowDepth() { return GRAVEL_LEAP_BELOW_DEPTH.get(); }
+    public static double gravelLeapImpactDamage() { return GRAVEL_LEAP_IMPACT_DAMAGE.get(); }
+    public static int gravelLeapBlocks() { return GRAVEL_LEAP_BLOCKS.get(); }
+    public static boolean gravelLeapPlacesBlocks() { return GRAVEL_LEAP_PLACES_BLOCKS.get(); }
+    public static double gravelDropChance() { return GRAVEL_DROP_CHANCE.get(); }
+    public static double basaltFollowDistance() { return BASALT_FOLLOW_DISTANCE.get(); }
+    public static int basaltMaxFollowDistance() { return BASALT_MAX_FOLLOW_DISTANCE.get(); }
+    public static int basaltThreatRange() { return BASALT_THREAT_RANGE.get(); }
+    public static double basaltMagnetRadius() { return BASALT_MAGNET_RADIUS.get(); }
+    public static int basaltArrowCost() { return BASALT_ARROW_COST.get(); }
+    public static int basaltSmallFireballCost() { return BASALT_SMALL_FIREBALL_COST.get(); }
+    public static int basaltLargeFireballCost() { return BASALT_LARGE_FIREBALL_COST.get(); }
+    public static int basaltOtherProjectileCost() { return BASALT_OTHER_PROJECTILE_COST.get(); }
+    public static int basaltMeleeHitCost() { return BASALT_MELEE_HIT_COST.get(); }
+    public static double basaltDropChance() { return BASALT_DROP_CHANCE.get(); }
 }

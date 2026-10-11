@@ -3,3 +3,15 @@
 # are changed when only line endings change.
 src/generated/**/.cache/cache text eol=lf
 src/generated/**/*.json text eol=lf
+
+# Keep source and data files LF regardless of the editor/OS that touched them.
+*.java text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.toml text eol=lf
+*.py text eol=lf
+*.gradle text eol=lf
+*.properties text eol=lf
+*.yml text eol=lf
+gradlew text eol=lf
+*.bat text eol=crlf

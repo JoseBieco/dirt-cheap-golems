@@ -24,9 +24,13 @@ public final class ModGameTests {
         SmokeTests.class,
         CoreGolemTests.class,
         ActivationTests.class,
+        CommandTests.class,
         DirtGolemTests.class,
         SandGolemTests.class,
-        NetherrackGolemTests.class
+        NetherrackGolemTests.class,
+        EndStoneGolemTests.class,
+        GravelGolemTests.class,
+        BasaltGolemTests.class
     );
 
     private static final DeferredRegister<Consumer<GameTestHelper>> FUNCTIONS =

@@ -1,6 +1,9 @@
 package com.josebieco.dirtcheapgolems.client;
 
 import com.josebieco.dirtcheapgolems.DirtCheapGolems;
+import com.josebieco.dirtcheapgolems.entity.BasaltGolem;
+import com.josebieco.dirtcheapgolems.entity.EndStoneGolem;
+import com.josebieco.dirtcheapgolems.entity.GravelGolem;
 import com.josebieco.dirtcheapgolems.entity.NetherrackGolem;
 import com.josebieco.dirtcheapgolems.registry.ModEntities;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
@@ -30,6 +33,19 @@ public final class ClientSetup {
             renderer.addEmissiveLayer(CheapGolemRenderer.texture("netherrack_golem_glow"));
             return renderer;
         });
+        event.registerEntityRenderer(ModEntities.END_STONE_GOLEM.get(), context -> {
+            var renderer = new CheapGolemRenderer<EndStoneGolem>(context, CheapGolemRenderer.texture("end_stone_golem"));
+            renderer.enableBobbing();
+            return renderer;
+        });
+        event.registerEntityRenderer(ModEntities.GRAVEL_GOLEM.get(),
+            context -> new CheapGolemRenderer<GravelGolem>(context, CheapGolemRenderer.texture("gravel_golem")));
+        event.registerEntityRenderer(ModEntities.BASALT_GOLEM.get(), context -> {
+            var renderer = new CheapGolemRenderer<BasaltGolem>(context, CheapGolemRenderer.texture("basalt_golem"));
+            renderer.setScale(1.3F);
+            return renderer;
+        });
+        event.registerEntityRenderer(ModEntities.FLINT_SHARD.get(), context -> new ThrownItemRenderer<>(context, 0.5F, false));
         event.registerEntityRenderer(ModEntities.SAND_BLAST.get(), context -> new ThrownItemRenderer<>(context, 0.5F, false));
     }
 }

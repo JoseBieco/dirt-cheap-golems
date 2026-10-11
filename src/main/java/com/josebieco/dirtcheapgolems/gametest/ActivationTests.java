@@ -37,12 +37,20 @@ public final class ActivationTests {
 
     /** Makes a mock player holding one golem core and uses it on the given relative block. */
     static ItemStack useCore(GameTestHelper helper, GameType gameType, BlockPos relativeClicked) {
-        Player player = helper.makeMockServerPlayer(gameType);
+        return useCore(helper, gameType, relativeClicked, false);
+    }
+
+    /** As above, optionally sneaking. */
+    static ItemStack useCore(GameTestHelper helper, GameType gameType, BlockPos relativeClicked, boolean sneaking) {
+        // Sneaking commands send action-bar messages, which need a player with a network connection.
+        Player player = sneaking ? helper.makeMockServerPlayerFull(gameType) : helper.makeMockServerPlayer(gameType);
+        player.setShiftKeyDown(sneaking);
         var stack = new ItemStack(ModItems.GOLEM_CORE.get(), 1);
         player.setItemInHand(InteractionHand.MAIN_HAND, stack);
         var abs = helper.absolutePos(relativeClicked);
         var hit = new BlockHitResult(Vec3.atCenterOf(abs), Direction.UP, abs, false);
         stack.useOn(new UseOnContext(player, InteractionHand.MAIN_HAND, hit));
+        if (sneaking) Arena.removePlayer(helper, (net.minecraft.server.level.ServerPlayer) player);
         return stack;
     }
 
