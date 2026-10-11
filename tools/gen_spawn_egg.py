@@ -1,12 +1,13 @@
-"""Generates the shared, tintable spawn egg template (original pixel art, stdlib only).
+"""Generates custom, mob-styled spawn egg textures (Minecraft 1.21.5+ style).
 
 Run from the project root:  python tools/gen_spawn_egg.py
 Outputs into src/main/resources/assets/dirtcheapgolems/textures/item/:
-  golem_spawn_egg_base.png     layer0 - egg shell in light grays (tinted with the shell color)
-  golem_spawn_egg_overlay.png  layer1 - pebble-shaped spots in light grays (tinted with the spot color)
-
-Both layers are grayscale on purpose: item tints MULTIPLY the texture color, so dark
-pixels would crush every tint. Shading lives in the gray values.
+  dirt_golem_spawn_egg.png
+  sand_golem_spawn_egg.png
+  netherrack_golem_spawn_egg.png
+  end_stone_golem_spawn_egg.png
+  gravel_golem_spawn_egg.png
+  basalt_golem_spawn_egg.png
 """
 import os
 import struct
@@ -14,85 +15,269 @@ import zlib
 
 OUT = os.path.join("src", "main", "resources", "assets", "dirtcheapgolems", "textures", "item")
 
-# Egg silhouette: row -> (first_x, last_x), inclusive. Narrower at the top, like an egg.
-EGG_ROWS = {
-    1: (6, 9), 2: (5, 10), 3: (4, 11), 4: (4, 11),
-    5: (3, 12), 6: (3, 12), 7: (3, 12), 8: (3, 12), 9: (3, 12), 10: (3, 12), 11: (3, 12), 12: (3, 12),
-    13: (4, 11), 14: (6, 9),
-}
-
-# Shell shades (gray levels): light from the upper left.
-OUTLINE = 118
-SHADES = [255, 236, 214, 190]  # highlight, light, mid, shadow
-
-# Pebble-shaped spots: list of (x, y). The last pixel of each pebble is its shaded edge.
-PEBBLES = [
-    [(8, 3), (9, 3), (8, 4), (9, 4)],
-    [(4, 7), (5, 7), (4, 8), (5, 8)],
-    [(9, 6), (10, 6), (9, 7), (10, 7), (11, 7)],
-    [(6, 10), (7, 10), (6, 11), (7, 11)],
-    [(10, 11), (11, 11), (10, 12)],
-]
-SPOT_LIGHT, SPOT_SHADE = 245, 200
-
-
-def in_egg(x, y):
-    r = EGG_ROWS.get(y)
-    return r is not None and r[0] <= x <= r[1]
-
-
-def is_outline(x, y):
-    return in_egg(x, y) and any(not in_egg(x + dx, y + dy) for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)))
-
-
-def shell_shade(x, y):
-    # Diagonal gradient: 0 at upper left, 1 at lower right of the egg box (x 3..12, y 1..14).
-    t = ((x - 3) / 9 + (y - 1) / 13) / 2
-    if (x, y) in ((5, 3), (5, 4), (6, 3), (4, 5)):
-        return SHADES[0]
-    if t < 0.38:
-        return SHADES[1]
-    if t < 0.68:
-        return SHADES[2]
-    return SHADES[3]
-
-
-def write_png(path, pixels, w=16, h=16):
-    raw = b"".join(b"\x00" + b"".join(struct.pack("4B", *pixels[y * w + x]) for x in range(w)) for y in range(h))
+def write_png(path, pixels_2d, scale=1):
+    h = len(pixels_2d)
+    w = len(pixels_2d[0])
+    out_w = w * scale
+    out_h = h * scale
+    
+    rows = []
+    for y in range(out_h):
+        src_y = y // scale
+        row_bytes = bytearray(b"\x00")
+        for x in range(out_w):
+            src_x = x // scale
+            r, g, b, a = pixels_2d[src_y][src_x]
+            row_bytes.extend((r, g, b, a))
+        rows.append(bytes(row_bytes))
+    
+    raw = b"".join(rows)
 
     def chunk(tag, data):
         c = tag + data
         return struct.pack(">I", len(data)) + c + struct.pack(">I", zlib.crc32(c) & 0xFFFFFFFF)
 
-    png = b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", w, h, 8, 6, 0, 0, 0))
-    png += chunk(b"IDAT", zlib.compress(raw, 9)) + chunk(b"IEND", b"")
+    png = b"\x89PNG\r\n\x1a\n"
+    png += chunk(b"IHDR", struct.pack(">IIBBBBB", out_w, out_h, 8, 6, 0, 0, 0))
+    png += chunk(b"IDAT", zlib.compress(raw, 9))
+    png += chunk(b"IEND", b"")
+    
+    os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "wb") as f:
         f.write(png)
 
+def parse_and_validate(name, grid_str, colors):
+    lines = [l.strip() for l in grid_str.strip().split("\n") if l.strip()]
+    assert len(lines) == 16, f"{name}: expected 16 rows, got {len(lines)}"
+    pixels = []
+    for y, line in enumerate(lines):
+        assert len(line) == 16, f"{name}: row {y} len={len(line)} != 16: '{line}'"
+        left_dots = len(line) - len(line.lstrip('.'))
+        right_dots = len(line) - len(line.rstrip('.'))
+        assert left_dots == right_dots, f"{name}: row {y} asymmetric! left={left_dots}, right={right_dots}: '{line}'"
+        pixels.append([colors[c] for c in line])
+    return pixels
+
+# --- 1. DIRT GOLEM ---
+DIRT_COLORS = {
+    ".": (0, 0, 0, 0),
+    "#": (52, 35, 22, 255),    # Soil outline
+    "D": (118, 82, 54, 255),   # Mid dirt
+    "d": (94, 65, 42, 255),    # Shadow dirt
+    "L": (145, 105, 70, 255),  # Highlight dirt
+    "l": (168, 125, 88, 255),  # Light highlight
+    "E": (34, 22, 14, 255),    # Golem eye
+    "G": (46, 125, 50, 255),   # Dark green stem
+    "g": (76, 175, 80, 255),   # Green leaf
+    "Y": (139, 195, 74, 255),  # Sprout leaf tip
+    "P": (130, 125, 120, 255), # Pebble
+    "p": (95, 90, 85, 255),    # Pebble shadow
+}
+
+DIRT_GRID = """
+................
+.....g....g.....
+....gYYggYYg....
+.....##GG##.....
+.....#LLLL#.....
+....#Lllddd#....
+...#Lllddddd#...
+...#LdEEddEE#...
+...#LldddddD#...
+...#LddddddD#...
+...#dDDDddDD#...
+...#dDPpddDP#...
+....#dDDDDd#....
+....#ddDddd#....
+.....##dd##.....
+......####......
+"""
+
+# --- 2. SAND GOLEM ---
+SAND_COLORS = {
+    ".": (0, 0, 0, 0),
+    "#": (120, 105, 70, 255),  # Sandstone outline
+    "S": (208, 192, 142, 255), # Mid sand
+    "s": (175, 160, 115, 255), # Shadow sand
+    "L": (232, 220, 178, 255), # Highlight sand
+    "l": (246, 238, 200, 255), # Bright highlight
+    "E": (92, 74, 40, 255),    # Amber turret eye
+    "e": (135, 115, 75, 255),  # Visor shadow
+    "C": (162, 142, 98, 255),  # Carved sandstone band
+    "W": (225, 215, 165, 255), # Sand particle highlight
+    "d": (145, 130, 90, 255),  # Dark sand shadow
+}
+
+SAND_GRID = """
+................
+..##...##...##..
+.#ll###ll###ll#.
+....#LLLLLL#....
+....#lCCCCl#....
+...#lLLssssL#...
+...#LSeeeeee#...
+...#LSeEEeeE#...
+...#lSeeeeee#...
+...#lCCCCCCd#...
+...#ssWWssWW#...
+...#sddddddd#...
+....#dddddd#....
+....#sddddd#....
+.....##sd##.....
+......####......
+"""
+
+# --- 3. NETHERRACK GOLEM ---
+NETHERRACK_COLORS = {
+    ".": (0, 0, 0, 0),
+    "#": (45, 15, 15, 255),
+    "N": (108, 48, 45, 255),
+    "n": (75, 28, 28, 255),
+    "L": (138, 68, 62, 255),
+    "E": (255, 195, 45, 255),
+    "e": (255, 120, 30, 255),
+    "F": (255, 87, 34, 255),
+    "f": (255, 193, 7, 255),
+    "M": (215, 45, 25, 255),
+}
+
+NETHERRACK_GRID = """
+................
+.......ff.......
+......fFFf......
+.....fFFFFf.....
+....#FFFFFF#....
+....#LNNNNL#....
+...#LNNnnnNN#...
+...#LNeEEnEe#...
+...#LNMffffM#...
+...#nMMFffFM#...
+...#nnNMFFMN#...
+...#nnMnMMnM#...
+....#nnnnnn#....
+....#nnnnnn#....
+.....##nn##.....
+......####......
+"""
+
+# --- 4. END STONE GOLEM ---
+END_STONE_COLORS = {
+    ".": (0, 0, 0, 0),
+    "#": (125, 128, 78, 255),  # End stone outline
+    "E": (218, 221, 155, 255), # Mid end stone
+    "e": (192, 195, 128, 255), # Shadow end stone
+    "L": (233, 235, 182, 255), # Highlight end stone
+    "l": (245, 247, 208, 255), # Bright highlight
+    "V": (155, 95, 192, 255),  # Ender eye purple
+    "v": (210, 160, 235, 255), # Glowing eye core
+    "P": (175, 80, 215, 255),  # Teleport swirl purple
+    "p": (230, 190, 255, 255), # Teleport particle sparkle
+    "C": (168, 172, 108, 255), # End stone crater
+}
+
+END_STONE_GRID = """
+................
+......p..p......
+.....pPPpPP.....
+.....##PP##.....
+.....#LLLL#.....
+....#Lleeee#....
+...#LlEvvEvE#...
+...#LeEVVvEV#...
+...#LEeeeeee#...
+...#LeCCeeCC#...
+...#eEEEeeEE#...
+...#eeCeeeCe#...
+....#eeeeee#....
+....#eeeeee#....
+.....##ee##.....
+......####......
+"""
+
+# --- 5. GRAVEL GOLEM ---
+GRAVEL_COLORS = {
+    ".": (0, 0, 0, 0),
+    "#": (50, 48, 48, 255),    # Gravel dark outline
+    "G": (130, 126, 125, 255), # Mid gravel
+    "g": (102, 98, 98, 255),   # Shadow gravel
+    "L": (152, 148, 147, 255), # Highlight gravel
+    "l": (172, 168, 167, 255), # Bright pebble
+    "F": (30, 28, 28, 255),    # Flint shard blade
+    "f": (65, 62, 62, 255),    # Flint mid tone
+    "S": (105, 100, 100, 255), # Flint sharp edge highlight
+    "E": (40, 38, 38, 255),    # Dark artillery eye
+    "e": (75, 70, 70, 255),    # Brow shadow
+}
+
+GRAVEL_GRID = """
+................
+.......FF.......
+......fSSf......
+.....fSSSSf.....
+....#fFFFFf#....
+....#fLGGGL#....
+...#LlGeeeGL#...
+...#LgEEggEE#...
+...#Lgffffgg#...
+...#GfSSSSfg#...
+...#Gggggggg#...
+...#gLgglggg#...
+....#gggggg#....
+....#gggggg#....
+.....##gg##.....
+......####......
+"""
+
+# --- 6. BASALT GOLEM ---
+BASALT_COLORS = {
+    ".": (0, 0, 0, 0),
+    "#": (34, 33, 38, 255),    # Basalt deep outline
+    "B": (78, 77, 82, 255),    # Mid basalt
+    "b": (58, 57, 62, 255),    # Shadow basalt
+    "L": (98, 97, 104, 255),   # Highlight basalt
+    "l": (120, 122, 130, 255), # Polished ridge
+    "S": (110, 135, 150, 255), # Shield plate steel-blue
+    "s": (70, 90, 105, 255),   # Shield shade
+    "C": (160, 185, 200, 255), # Shield polished chevron crest
+    "E": (154, 160, 168, 255), # Shield sentinel eye
+    "e": (210, 218, 225, 255), # Eye core gleam
+}
+
+BASALT_GRID = """
+................
+.....##..##.....
+....#SS##SS#....
+....#SSSSSS#....
+....#lCCCCl#....
+...#lLSssssL#...
+...#LSbEEbEE#...
+...#LSbeebee#...
+...#lSsssssS#...
+...#lSCCsCCl#...
+...#bbSsSsbb#...
+...#bbbbbbbb#...
+....#bbbbbb#....
+....#bbbbbb#....
+.....##bb##.....
+......####......
+"""
+
+ALL_GOLEMS = [
+    ("dirt_golem_spawn_egg", DIRT_GRID, DIRT_COLORS),
+    ("sand_golem_spawn_egg", SAND_GRID, SAND_COLORS),
+    ("netherrack_golem_spawn_egg", NETHERRACK_GRID, NETHERRACK_COLORS),
+    ("end_stone_golem_spawn_egg", END_STONE_GRID, END_STONE_COLORS),
+    ("gravel_golem_spawn_egg", GRAVEL_GRID, GRAVEL_COLORS),
+    ("basalt_golem_spawn_egg", BASALT_GRID, BASALT_COLORS),
+]
 
 def main():
     os.makedirs(OUT, exist_ok=True)
-    clear = (0, 0, 0, 0)
-
-    base = []
-    for y in range(16):
-        for x in range(16):
-            if not in_egg(x, y):
-                base.append(clear)
-            else:
-                g = OUTLINE if is_outline(x, y) else shell_shade(x, y)
-                base.append((g, g, g, 255))
-    write_png(os.path.join(OUT, "golem_spawn_egg_base.png"), base)
-
-    overlay = [clear] * 256
-    for pebble in PEBBLES:
-        for i, (x, y) in enumerate(pebble):
-            assert in_egg(x, y) and not is_outline(x, y), (x, y)
-            g = SPOT_SHADE if i == len(pebble) - 1 else SPOT_LIGHT
-            overlay[y * 16 + x] = (g, g, g, 255)
-    write_png(os.path.join(OUT, "golem_spawn_egg_overlay.png"), overlay)
-    print("wrote golem_spawn_egg_base.png and golem_spawn_egg_overlay.png to", OUT)
-
+    for name, grid, colors in ALL_GOLEMS:
+        pixels = parse_and_validate(name, grid, colors)
+        target = os.path.join(OUT, f"{name}.png")
+        write_png(target, pixels, scale=1)
+        print(f"wrote {name}.png to {OUT}")
 
 if __name__ == "__main__":
     main()
