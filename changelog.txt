@@ -13,6 +13,8 @@ Dirt Cheap Golems 2.0.0
  - New config sections: end_stone, gravel, basalt
  - The Golem Core recipe now shows in the recipe book
  - Version bumped to 2.0.0
+ - Licensed under MIT
+ - Release jar no longer ships GameTest data; test functions are only registered in development runs
 
 26.3 Changelog
 66.0

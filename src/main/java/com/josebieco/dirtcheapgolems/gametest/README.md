@@ -20,6 +20,11 @@ This mod glues them together:
    test is added, renamed or its annotation changes.**
 4. `gradlew runGameTestServer` runs every registered test instance and exits non-zero on failure.
 
+**Dev only.** Test functions are registered only when the JVM has `-Ddirtcheapgolems.gametests=true`,
+which `build.gradle` sets on every run (client, server, gameTestServer, data). The `jar` task excludes
+`data/dirtcheapgolems/test_instance/**` and `test_environment/**`, so released jars carry no tests.
+A custom run configuration (e.g. in your IDE) must set that property or tests won't be found.
+
 Arena: `Arena.STRUCTURE` = `forge:empty9x5x9` — Forge generates `forge:emptyXxYxZ` structures (all air)
 on the fly. The arena has no floor of its own; call `Arena.floor(helper)` (stone at relative y=0;
 note Forge's `helper.makeFloor()` builds at y=-1, under the arena)

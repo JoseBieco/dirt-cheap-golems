@@ -190,3 +190,7 @@ Specs de design: [v1](docs/specs/2026-10-09-dirt-cheap-golems-design.md), [v2](d
 ## Autor
 
 José Eduardo Saroba Bieco
+
+## Licença
+
+[MIT](LICENSE.txt)
