@@ -26,6 +26,8 @@ minecraft {
 
             systemProperty 'eventbus.api.strictRuntimeChecks', 'true'
             systemProperty 'forge.enabledGameTestNamespaces', 'dirtcheapgolems'
+            // Dev runs only: registers the mod's GameTest functions (see DirtCheapGolems).
+            systemProperty 'dirtcheapgolems.gametests', 'true'
 
             // Java 25 warns when Forge's UnsafeHacks uses sun.misc.Unsafe; allow it explicitly.
             // (The "restricted method / --enable-native-access" warnings can't be silenced from here:
@@ -75,4 +77,11 @@ dependencies {
 
 tasks.named('test', Test) {
     useJUnitPlatform()
+}
+
+// GameTest data is for development only: keep it out of the released jar.
+// (The gametest classes stay in the jar but are inert: they are only registered in dev runs.)
+tasks.named('jar', Jar) {
+    exclude 'data/dirtcheapgolems/test_instance/**'
+    exclude 'data/dirtcheapgolems/test_environment/**'
 }
